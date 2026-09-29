@@ -25,9 +25,14 @@ export async function middleware(request: NextRequest) {
     }
   );
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  let user = null;
+  try {
+    const { data } = await supabase.auth.getUser();
+    user = data.user;
+  } catch {
+    // Supabase unreachable — let the request through rather than returning 500
+    return supabaseResponse;
+  }
 
   const { pathname } = request.nextUrl;
 
