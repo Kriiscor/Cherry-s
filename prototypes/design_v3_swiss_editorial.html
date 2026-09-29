@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NutriVision - Version 3: Swiss Editorial & Neo-Brutalist 🟦</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800;900&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['"Outfit"', 'sans-serif'] },
+          colors: {
+            sand: '#F7F5F0',
+            cobalt: '#1D4ED8',
+            popcoral: '#FF5A5F',
+            ink: '#0F172A',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: 'Outfit', sans-serif; background-color: #F7F5F0; color: #0F172A; }
+    .brutal-card { background: white; border: 2.5px solid #0F172A; box-shadow: 4px 4px 0px #0F172A; }
+    .brutal-btn { background: #1D4ED8; color: white; border: 2.5px solid #0F172A; box-shadow: 3px 3px 0px #0F172A; transition: all 0.15s ease; }
+    .brutal-btn:hover { transform: translate(-2px, -2px); box-shadow: 5px 5px 0px #0F172A; }
+  </style>
+</head>
+<body class="min-h-screen pb-20">
+
+  <!-- Header Header -->
+  <header class="sticky top-0 z-50 bg-white border-b-2.5 border-ink px-6 py-4 flex items-center justify-between shadow-xs">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 bg-cobalt text-white font-black text-xl flex items-center justify-center border-2 border-ink shadow-[2px_2px_0px_#0F172A]">
+        NV
+      </div>
+      <div>
+        <h1 class="font-black text-lg tracking-tight text-ink uppercase">NUTRIVISION <span class="text-xs bg-popcoral text-white font-bold px-2 py-0.5 border border-ink ml-1">V3: SWISS</span></h1>
+        <p class="text-xs text-slate-600 font-semibold">Design Graphique Suisse & Typographie Impactante</p>
+      </div>
+    </div>
+    <div>
+      <span class="text-xs font-black bg-yellow-300 text-ink px-3 py-1.5 border-2 border-ink shadow-[2px_2px_0px_#0F172A]">ÉDITION GRAPHIQUE 2026</span>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-6 pt-10 space-y-12">
+
+    <!-- HERO HEADER -->
+    <section class="brutal-card p-8 sm:p-10 rounded-2xl bg-white relative">
+      <div class="max-w-2xl space-y-4">
+        <span class="inline-block px-3 py-1 bg-cobalt text-white text-xs font-black tracking-widest uppercase border border-ink shadow-[2px_2px_0px_#0F172A]">
+          LA NUTRITION DÉSTRUCTURÉE & PRÉCISE
+        </span>
+        <h2 class="text-3xl sm:text-4xl font-black text-ink uppercase leading-none">
+          Clarté absolue. Données franches. Aucune distraction.
+        </h2>
+        <p class="text-xs sm:text-sm font-semibold text-slate-700 leading-relaxed">
+          Design suisse moderne inspiré des affiches internationales. Typographie ultra-lisible, lignes structurelles noires et contrastes francs.
+        </p>
+      </div>
+    </section>
+
+    <!-- DASHBOARD VIEWPORT -->
+    <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+      <!-- MAIN GAUGE BRUTAL -->
+      <div class="brutal-card p-6 rounded-2xl space-y-5">
+        <div class="flex justify-between items-center border-b-2 border-ink pb-3">
+          <div>
+            <p class="text-xs font-black text-cobalt uppercase tracking-widest">APPORTS DU JOUR</p>
+            <h3 class="text-2xl font-black text-ink">1 720 / 2 100 KCAL</h3>
+          </div>
+          <div class="w-12 h-12 bg-yellow-300 text-ink font-black text-lg flex items-center justify-center border-2 border-ink shadow-[2px_2px_0px_#0F172A]">
+            81%
+          </div>
+        </div>
+
+        <!-- Solid Progress Bar -->
+        <div class="h-5 bg-slate-100 border-2 border-ink rounded-lg overflow-hidden p-0.5">
+          <div class="h-full bg-cobalt rounded-sm" style="width: 81%"></div>
+        </div>
+
+        <div class="grid grid-cols-3 gap-2 pt-2">
+          <div class="bg-sand p-3 rounded-lg border-2 border-ink text-center">
+            <span class="text-[10px] font-black text-slate-600 uppercase">PROTÉINES</span>
+            <p class="text-sm font-black text-cobalt">140G</p>
+          </div>
+          <div class="bg-sand p-3 rounded-lg border-2 border-ink text-center">
+            <span class="text-[10px] font-black text-slate-600 uppercase">GLUCIDES</span>
+            <p class="text-sm font-black text-ink">185G</p>
+          </div>
+          <div class="bg-sand p-3 rounded-lg border-2 border-ink text-center">
+            <span class="text-[10px] font-black text-slate-600 uppercase">LIPIDES</span>
+            <p class="text-sm font-black text-popcoral">50G</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SCAN REPAS CTA CARD -->
+      <div class="brutal-card p-6 rounded-2xl flex flex-col justify-between space-y-4">
+        <div>
+          <div class="w-12 h-12 bg-popcoral text-white font-black flex items-center justify-center mb-3 border-2 border-ink shadow-[2px_2px_0px_#0F172A]">
+            <i data-lucide="camera" class="w-6 h-6"></i>
+          </div>
+          <h4 class="font-black text-ink text-xl uppercase">SCANNER VOTRE REPAS</h4>
+          <p class="text-xs font-semibold text-slate-600 mt-1">Capturez votre plat. L'analyse algorithmique extrait immédiatement la masse et les calories.</p>
+        </div>
+
+        <button class="brutal-btn font-black py-3.5 px-4 rounded-xl flex items-center justify-center gap-2 text-xs uppercase tracking-wider">
+          <i data-lucide="arrow-right-circle" class="w-4 h-4"></i> LANCER L'ANALYSE IA
+        </button>
+      </div>
+
+      <!-- COACH CARD -->
+      <div class="brutal-card p-6 rounded-2xl bg-yellow-300 space-y-4">
+        <div class="flex justify-between items-center">
+          <span class="px-3 py-1 bg-white text-ink text-xs font-black border-2 border-ink shadow-[2px_2px_0px_#0F172A]">SCORE 90/100</span>
+          <i data-lucide="award" class="w-6 h-6 text-ink"></i>
+        </div>
+        <h4 class="font-black text-ink text-lg uppercase">CONSEIL DE L'IA GRAPHIC</h4>
+        <p class="text-xs font-bold text-ink leading-relaxed bg-white p-3 rounded-xl border-2 border-ink">
+          "Votre stabilité calorique est excellente sur 5 jours consécutifs. Augmentez légèrement les légumes verts au dîner."
+        </p>
+      </div>
+
+    </section>
+
+  </main>
+
+  <script>lucide.createIcons();</script>
+</body>
+</html>

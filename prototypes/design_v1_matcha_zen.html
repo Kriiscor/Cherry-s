@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NutriVision - Version 1: Matcha & Organic Zen 🌿</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'] },
+          colors: {
+            forest: { 900: '#132A13', 800: '#1E3A2B', 700: '#31572C' },
+            matcha: { 500: '#4F772D', 400: '#90A955', 300: '#ECF39E', 100: '#E8F5E9', 50: '#F4F8F3' },
+            stonebg: '#F4F6F0'
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #F4F6F0; color: #132A13; }
+    .glass-zen { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(16px); border: 1px solid rgba(79, 119, 45, 0.15); }
+    .zen-glow { box-shadow: 0 10px 30px -10px rgba(79, 119, 45, 0.15); }
+  </style>
+</head>
+<body class="min-h-screen pb-20">
+
+  <!-- Header Header -->
+  <header class="sticky top-0 z-50 glass-zen border-b border-matcha-50/50 px-6 py-4 flex items-center justify-between shadow-xs">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-full bg-forest-800 text-matcha-300 flex items-center justify-center font-bold text-lg shadow-sm">
+        🌿
+      </div>
+      <div>
+        <h1 class="font-extrabold text-base tracking-tight text-forest-900">NutriVision <span class="text-xs font-normal text-matcha-500 bg-matcha-100 px-2 py-0.5 rounded-full ml-1">V1: Matcha Zen</span></h1>
+        <p class="text-[11px] text-slate-500">Design Épuré, Naturel & Bio Minimaliste</p>
+      </div>
+    </div>
+    <div class="flex items-center gap-3">
+      <span class="text-xs font-bold text-forest-800 bg-white px-3 py-1.5 rounded-full border border-matcha-100 shadow-2xs">Objectif : Équilibre & Végétal</span>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-6 pt-10 space-y-12">
+
+    <!-- HERO HEADER -->
+    <section class="bg-gradient-to-br from-forest-800 via-forest-900 to-black p-8 sm:p-10 rounded-[36px] text-white shadow-xl relative overflow-hidden">
+      <div class="relative z-10 max-w-xl space-y-4">
+        <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-matcha-500/20 text-matcha-300 text-xs font-semibold border border-matcha-500/30">
+          <i data-lucide="leaf" class="w-3.5 h-3.5"></i> Conception Éco-Minimaliste
+        </span>
+        <h2 class="text-3xl font-extrabold leading-tight">Une approche saine, douce et consciente de votre nutrition.</h2>
+        <p class="text-xs text-slate-300 leading-relaxed">Design inspiré de l'éditorial botanique japonais. Couleurs apaisantes, contours arrondis et typographie haute lisibilité.</p>
+      </div>
+    </section>
+
+    <!-- DASHBOARD VIEWPORT -->
+    <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+      <!-- MAIN GAUGE -->
+      <div class="bg-white p-6 rounded-[28px] border border-matcha-100 shadow-sm space-y-5">
+        <div class="flex justify-between items-center">
+          <div>
+            <p class="text-xs font-bold text-matcha-500 uppercase tracking-wide">Calories Consommées</p>
+            <h3 class="text-2xl font-extrabold text-forest-900">1 540 / 2 000 kcal</h3>
+          </div>
+          <div class="w-12 h-12 rounded-full bg-matcha-50 text-forest-800 flex items-center justify-center font-bold text-sm border border-matcha-100">
+            77%
+          </div>
+        </div>
+
+        <div class="h-3 bg-matcha-50 rounded-full overflow-hidden p-0.5">
+          <div class="h-full bg-gradient-to-r from-matcha-400 to-forest-800 rounded-full" style="width: 77%"></div>
+        </div>
+
+        <div class="grid grid-cols-3 gap-2 pt-2">
+          <div class="bg-matcha-50 p-3 rounded-2xl text-center">
+            <span class="text-[10px] font-bold text-forest-700">Protéines</span>
+            <p class="text-sm font-black text-forest-900">110g</p>
+          </div>
+          <div class="bg-matcha-50 p-3 rounded-2xl text-center">
+            <span class="text-[10px] font-bold text-forest-700">Glucides</span>
+            <p class="text-sm font-black text-forest-900">175g</p>
+          </div>
+          <div class="bg-matcha-50 p-3 rounded-2xl text-center">
+            <span class="text-[10px] font-bold text-forest-700">Lipides</span>
+            <p class="text-sm font-black text-forest-900">48g</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SCAN REPAS CTA CARD -->
+      <div class="bg-white p-6 rounded-[28px] border border-matcha-100 shadow-sm flex flex-col justify-between space-y-4">
+        <div>
+          <div class="w-12 h-12 rounded-2xl bg-matcha-100 text-forest-800 flex items-center justify-center mb-3">
+            <i data-lucide="camera" class="w-6 h-6"></i>
+          </div>
+          <h4 class="font-extrabold text-forest-900 text-lg">Scanner une assiette</h4>
+          <p class="text-xs text-slate-500 mt-1">L'IA identifie les ingrédients, estime le poids et enregistre vos macros automatiquement.</p>
+        </div>
+
+        <button class="w-full bg-forest-800 hover:bg-forest-900 text-white font-bold py-3.5 px-4 rounded-2xl transition flex items-center justify-center gap-2 text-xs shadow-md">
+          <i data-lucide="aperture" class="w-4 h-4"></i> Lancer la caméra Zen
+        </button>
+      </div>
+
+      <!-- COACH SUMMARY -->
+      <div class="bg-matcha-50 p-6 rounded-[28px] border border-matcha-200 shadow-sm space-y-4">
+        <div class="flex justify-between items-center">
+          <span class="px-3 py-1 rounded-full bg-white text-forest-800 text-xs font-bold border border-matcha-100">Score 92/100</span>
+          <i data-lucide="sprout" class="w-5 h-5 text-matcha-500"></i>
+        </div>
+        <h4 class="font-extrabold text-forest-900 text-base">Bilan Hebdo Équilibré</h4>
+        <p class="text-xs text-forest-800 leading-relaxed bg-white/70 p-3 rounded-2xl">
+          "Excellente consommation de fibres végétales cette semaine. Vos apports sont stables et votre régularité est remarquable."
+        </p>
+      </div>
+
+    </section>
+
+  </main>
+
+  <script>lucide.createIcons();</script>
+</body>
+</html>

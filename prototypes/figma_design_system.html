@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Figma Design System - App Cherry 🍒</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            cherry: {
+              50: '#FFF0F3',
+              100: '#FFCCD5',
+              200: '#FFB3C1',
+              300: '#FF8FA3',
+              400: '#FF4D6D',
+              500: '#E63946',
+              600: '#C9184A',
+              700: '#A01A58',
+              800: '#800F2F',
+              900: '#590D22',
+              950: '#2B0410',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #FAFAFC; }
+    .cherry-gradient { background: linear-gradient(135deg, #C9184A 0%, #800F2F 100%); }
+    .cherry-gradient-soft { background: linear-gradient(135deg, #FFF0F3 0%, #FFCCD5 100%); }
+    .cherry-glow { box-shadow: 0 10px 30px -5px rgba(201, 24, 74, 0.3); }
+    .glass-card { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); border: 1px solid rgba(255, 204, 213, 0.5); }
+  </style>
+</head>
+<body class="text-slate-900 min-h-screen pb-20">
+
+  <!-- Header Figma Showcase Bar -->
+  <header class="sticky top-0 z-50 glass-card border-b border-cherry-100 px-6 py-4 flex items-center justify-between shadow-sm">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-2xl cherry-gradient flex items-center justify-center text-white text-xl shadow-md shadow-cherry-600/30">
+        🍒
+      </div>
+      <div>
+        <div class="flex items-center gap-2">
+          <h1 class="font-extrabold text-lg tracking-tight text-slate-900">App Cherry</h1>
+          <span class="px-2 py-0.5 text-xs font-semibold bg-cherry-100 text-cherry-700 rounded-full">Figma System v1.0</span>
+        </div>
+        <p class="text-xs text-slate-500">Charte Graphique & Composants UI - Suivi Nutritionnel par IA</p>
+      </div>
+    </div>
+    <div class="flex items-center gap-3">
+      <a href="#palette" class="text-xs font-semibold text-slate-600 hover:text-cherry-600 px-3 py-1.5 rounded-lg hover:bg-cherry-50 transition">Palette</a>
+      <a href="#buttons" class="text-xs font-semibold text-slate-600 hover:text-cherry-600 px-3 py-1.5 rounded-lg hover:bg-cherry-50 transition">Boutons</a>
+      <a href="#cards" class="text-xs font-semibold text-slate-600 hover:text-cherry-600 px-3 py-1.5 rounded-lg hover:bg-cherry-50 transition">Composants</a>
+      <a href="#preview" class="text-xs font-semibold bg-cherry-600 hover:bg-cherry-700 text-white px-4 py-2 rounded-xl transition shadow-sm">Vue App Mobile</a>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-6 pt-10 space-y-16">
+
+    <!-- HERO SECTION DESIGN INTENTIONS -->
+    <section class="relative overflow-hidden rounded-3xl cherry-gradient p-10 text-white shadow-xl shadow-cherry-900/20">
+      <div class="relative z-10 max-w-2xl">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md text-cherry-100 text-xs font-medium mb-4 border border-white/20">
+          <i data-lucide="palette" class="w-3.5 h-3.5"></i> Intentions de Design & Direction Artistique
+        </div>
+        <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight mb-4">
+          Une identité visuelle "Cerise" gourmande, moderne & bienveillante.
+        </h2>
+        <p class="text-cherry-100 text-sm sm:text-base leading-relaxed mb-6">
+          Inspirée des palettes Figma Cerise et de l'univers culinaire premium, cette direction artistique allie la chaleur d'un bordeaux intense avec la fraîcheur d'un rouge cerise vif et des tons crèmes doux pour sublimer chaque repas.
+        </p>
+        <div class="flex flex-wrap gap-4 text-xs font-semibold">
+          <div class="flex items-center gap-2 bg-black/20 px-3 py-2 rounded-xl backdrop-blur-sm">
+            <span class="w-3 h-3 rounded-full bg-cherry-500"></span> Cerise Vif (#E63946) - Actions Principales
+          </div>
+          <div class="flex items-center gap-2 bg-black/20 px-3 py-2 rounded-xl backdrop-blur-sm">
+            <span class="w-3 h-3 rounded-full bg-cherry-900"></span> Cerise Noire (#590D22) - Titres & Thème Sombre
+          </div>
+          <div class="flex items-center gap-2 bg-black/20 px-3 py-2 rounded-xl backdrop-blur-sm">
+            <span class="w-3 h-3 rounded-full bg-emerald-500"></span> Vert Santé (#10B981) - Protéines & Succès
+          </div>
+        </div>
+      </div>
+      <!-- Background decorative cherry shapes -->
+      <div class="absolute -right-10 -bottom-10 w-96 h-96 rounded-full bg-cherry-500/20 blur-3xl pointer-events-none"></div>
+    </section>
+
+    <!-- SECTION 1: PALETTE DE COULEURS FIGMA -->
+    <section id="palette" class="space-y-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <h3 class="text-xl font-bold text-slate-900 flex items-center gap-2">
+            <i data-lucide="swatch-book" class="w-5 h-5 text-cherry-600"></i> Palette de Couleurs "Cerise"
+          </h3>
+          <p class="text-xs text-slate-500">Échelle chromatique Tailwind / Figma complète du projet</p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-11 gap-3">
+        <!-- 50 -->
+        <div class="bg-white p-2.5 rounded-2xl border border-slate-200 shadow-sm space-y-2">
+          <div class="h-16 rounded-xl bg-cherry-50 border border-cherry-100 flex items-end p-2">
+            <span class="text-[10px] font-bold text-cherry-900">50</span>
+          </div>
+          <div>
+            <p class="text-xs font-bold text-slate-800">Cherry 50</p>
+            <p class="text-[10px] text-slate-400 font-mono">#FFF0F3</p>
+          </div>
+        </div>
+        <!-- 100 -->
+        <div class="bg-white p-2.5 rounded-2xl border border-slate-200 shadow-sm space-y-2">
+          <div class="h-16 rounded-xl bg-cherry-100 flex items-end p-2">
+            <span class="text-[10px] font-bold text-cherry-900">100</span>
+          </div>
+          <div>
+            <p class="text-xs font-bold text-slate-800">Cherry 100</p>
+            <p class="text-[10px] text-slate-400 font-mono">#FFCCD5</p>
+          </div>
+        </div>
+        <!-- 200 -->
+        <div class="bg-white p-2.5 rounded-2xl border border-slate-200 shadow-sm space-y-2">
+          <div class="h-16 rounded-xl bg-cherry-200 flex items-end p-2">
+            <span class="text-[10px] font-bold text-cherry-900">200</span>
+          </div>
+          <div>
+            <p class="text-xs font-bold text-slate-800">Cherry 200</p>
+            <p class="text-[10px] text-slate-400 font-mono">#FFB3C1</p>
+          </div>
+        </div>
+        <!-- 300 -->
+        <div class="bg-white p-2.5 rounded-2xl border border-slate-200 shadow-sm space-y-2">
+          <div class="h-16 rounded-xl bg-cherry-300 flex items-end p-2">
+            <span class="text-[10px] font-bold text-white">300</span>
+          </div>
+          <div>
+            <p class="text-xs font-bold text-slate-800">Cherry 300</p>
+            <p class="text-[10px] text-slate-400 font-mono">#FF8FA3</p>
+          </div>
+        </div>
+        <!-- 400 -->
+        <div class="bg-white p-2.5 rounded-2xl border border-slate-200 shadow-sm space-y-2">
+          <div class="h-16 rounded-xl bg-cherry-400 flex items-end p-2">
+            <span class="text-[10px] font-bold text-white">400</span>
+          </div>
+          <div>
+            <p class="text-xs font-bold text-slate-800">Cherry 400</p>
+            <p class="text-[10px] text-slate-400 font-mono">#FF4D6D</p>
+          </div>
+        </div>
+        <!-- 500 MAIN -->
+        <div class="bg-white p-2.5 rounded-2xl border-2 border-cherry-500 shadow-md space-y-2">
+          <div class="h-16 rounded-xl bg-cherry-500 flex items-end p-2">
+            <span class="text-[10px] font-bold text-white">500 Main</span>
+          </div>
+          <div>
+            <p class="text-xs font-extrabold text-cherry-600">Cherry 500</p>
+            <p class="text-[10px] text-slate-400 font-mono">#E63946</p>
+          </div>
+        </div>
+        <!-- 600 -->
+        <div class="bg-white p-2.5 rounded-2xl border border-slate-200 shadow-sm space-y-2">
+          <div class="h-16 rounded-xl bg-cherry-600 flex items-end p-2">
+            <span class="text-[10px] font-bold text-white">600</span>
+          </div>
+          <div>
+            <p class="text-xs font-bold text-slate-800">Cherry 600</p>
+            <p class="text-[10px] text-slate-400 font-mono">#C9184A</p>
+          </div>
+        </div>
+        <!-- 700 -->
+        <div class="bg-white p-2.5 rounded-2xl border border-slate-200 shadow-sm space-y-2">
+          <div class="h-16 rounded-xl bg-cherry-700 flex items-end p-2">
+            <span class="text-[10px] font-bold text-white">700</span>
+          </div>
+          <div>
+            <p class="text-xs font-bold text-slate-800">Cherry 700</p>
+            <p class="text-[10px] text-slate-400 font-mono">#A01A58</p>
+          </div>
+        </div>
+        <!-- 800 -->
+        <div class="bg-white p-2.5 rounded-2xl border border-slate-200 shadow-sm space-y-2">
+          <div class="h-16 rounded-xl bg-cherry-800 flex items-end p-2">
+            <span class="text-[10px] font-bold text-white">800</span>
+          </div>
+          <div>
+            <p class="text-xs font-bold text-slate-800">Cherry 800</p>
+            <p class="text-[10px] text-slate-400 font-mono">#800F2F</p>
+          </div>
+        </div>
+        <!-- 900 DARK -->
+        <div class="bg-white p-2.5 rounded-2xl border border-slate-200 shadow-sm space-y-2">
+          <div class="h-16 rounded-xl bg-cherry-900 flex items-end p-2">
+            <span class="text-[10px] font-bold text-white">900</span>
+          </div>
+          <div>
+            <p class="text-xs font-bold text-slate-800">Cherry 900</p>
+            <p class="text-[10px] text-slate-400 font-mono">#590D22</p>
+          </div>
+        </div>
+        <!-- 950 -->
+        <div class="bg-white p-2.5 rounded-2xl border border-slate-200 shadow-sm space-y-2">
+          <div class="h-16 rounded-xl bg-cherry-950 flex items-end p-2">
+            <span class="text-[10px] font-bold text-white">950</span>
+          </div>
+          <div>
+            <p class="text-xs font-bold text-slate-800">Cherry 950</p>
+            <p class="text-[10px] text-slate-400 font-mono">#2B0410</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2: BOUTONS & BADGES SHADCN -->
+    <section id="buttons" class="space-y-6">
+      <div>
+        <h3 class="text-xl font-bold text-slate-900 flex items-center gap-2">
+          <i data-lucide="mouse-pointer-click" class="w-5 h-5 text-cherry-600"></i> Composants UI : Boutons & Badges
+        </h3>
+        <p class="text-xs text-slate-500">Variantes shadcn/ui stylisées avec les tokens Cerise</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Card Boutons -->
+        <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-6">
+          <h4 class="text-sm font-bold text-slate-700 uppercase tracking-wider">Variantes de Boutons</h4>
+
+          <div class="flex flex-wrap items-center gap-3">
+            <!-- Primary Cherry -->
+            <button class="bg-cherry-600 hover:bg-cherry-700 text-white font-semibold px-5 py-2.5 rounded-xl transition shadow-md shadow-cherry-600/30 flex items-center gap-2">
+              <i data-lucide="camera" class="w-4 h-4"></i> Scanner mon repas
+            </button>
+            <!-- Secondary Soft -->
+            <button class="bg-cherry-100 hover:bg-cherry-200 text-cherry-800 font-semibold px-5 py-2.5 rounded-xl transition flex items-center gap-2">
+              <i data-lucide="plus" class="w-4 h-4"></i> Ajouter un aliment
+            </button>
+            <!-- Outline -->
+            <button class="border border-cherry-200 hover:bg-cherry-50 text-cherry-700 font-semibold px-5 py-2.5 rounded-xl transition flex items-center gap-2">
+              <i data-lucide="sliders" class="w-4 h-4"></i> Ajuster
+            </button>
+            <!-- Ghost -->
+            <button class="hover:bg-slate-100 text-slate-600 font-medium px-4 py-2 rounded-xl transition">
+              Annuler
+            </button>
+          </div>
+
+          <div class="pt-4 border-t border-slate-100">
+            <p class="text-xs font-semibold text-slate-400 mb-3">États de chargement & désactivé</p>
+            <div class="flex flex-wrap items-center gap-3">
+              <button disabled class="bg-cherry-600 opacity-70 text-white font-semibold px-5 py-2.5 rounded-xl flex items-center gap-2 cursor-not-allowed">
+                <i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Analyse IA en cours...
+              </button>
+              <button disabled class="bg-slate-100 text-slate-400 font-semibold px-5 py-2.5 rounded-xl cursor-not-allowed">
+                Indisponible
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card Badges & Pills -->
+        <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-6">
+          <h4 class="text-sm font-bold text-slate-700 uppercase tracking-wider">Badges & Tags de Repas</h4>
+
+          <div class="flex flex-wrap items-center gap-3">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-cherry-100 text-cherry-700 border border-cherry-200">
+              🍒 Petit-déjeuner
+            </span>
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">
+              💪 High Protein (45g)
+            </span>
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-800 border border-amber-200">
+              ⚡ 520 kcal
+            </span>
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-indigo-100 text-indigo-800 border border-indigo-200">
+              ✨ Score IA 92/100
+            </span>
+          </div>
+
+          <div class="pt-4 border-t border-slate-100 space-y-3">
+            <p class="text-xs font-semibold text-slate-400">Pills de Navigation & Filtres</p>
+            <div class="flex items-center p-1 bg-slate-100 rounded-2xl w-max">
+              <button class="px-4 py-1.5 rounded-xl text-xs font-bold bg-white text-cherry-700 shadow-sm">Aujourd'hui</button>
+              <button class="px-4 py-1.5 rounded-xl text-xs font-medium text-slate-500 hover:text-slate-900">7 Derniers Jours</button>
+              <button class="px-4 py-1.5 rounded-xl text-xs font-medium text-slate-500 hover:text-slate-900">Mois</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 3: COMPOSANTS CORE DE L'APPLICATION -->
+    <section id="cards" class="space-y-6">
+      <div>
+        <h3 class="text-xl font-bold text-slate-900 flex items-center gap-2">
+          <i data-lucide="layout-grid" class="w-5 h-5 text-cherry-600"></i> Composants Core NutriVision
+        </h3>
+        <p class="text-xs text-slate-500">Cartes de jauges, Modal de vision IA et Bilan du Coach</p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+        <!-- COMPOSANT 1: JAUGES QUOTIDIENNES -->
+        <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-5">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-xs font-bold text-cherry-600 uppercase tracking-wider">Objectifs du jour</p>
+              <h4 class="text-lg font-extrabold text-slate-900">1 850 / 2 200 kcal</h4>
+            </div>
+            <div class="w-10 h-10 rounded-2xl bg-cherry-50 text-cherry-600 flex items-center justify-center font-bold">
+              84%
+            </div>
+          </div>
+
+          <!-- Main Calorie Progress Bar -->
+          <div class="space-y-1.5">
+            <div class="h-3.5 w-full bg-slate-100 rounded-full overflow-hidden p-0.5">
+              <div class="h-full cherry-gradient rounded-full transition-all duration-500" style="width: 84%"></div>
+            </div>
+            <p class="text-[11px] text-slate-400 font-medium text-right">Reste 350 kcal pour ce soir</p>
+          </div>
+
+          <!-- Macros Sub-Gauges -->
+          <div class="grid grid-cols-3 gap-3 pt-2">
+            <!-- Protéines -->
+            <div class="bg-emerald-50/60 p-3 rounded-2xl border border-emerald-100 text-center space-y-1">
+              <span class="text-[10px] font-extrabold text-emerald-700 uppercase">Protéines</span>
+              <p class="text-sm font-extrabold text-emerald-900">135g <span class="text-[10px] font-medium text-slate-400">/ 160g</span></p>
+              <div class="h-1.5 w-full bg-emerald-200 rounded-full overflow-hidden">
+                <div class="h-full bg-emerald-500 rounded-full" style="width: 84%"></div>
+              </div>
+            </div>
+            <!-- Glucides -->
+            <div class="bg-amber-50/60 p-3 rounded-2xl border border-amber-100 text-center space-y-1">
+              <span class="text-[10px] font-extrabold text-amber-700 uppercase">Glucides</span>
+              <p class="text-sm font-extrabold text-amber-900">190g <span class="text-[10px] font-medium text-slate-400">/ 220g</span></p>
+              <div class="h-1.5 w-full bg-amber-200 rounded-full overflow-hidden">
+                <div class="h-full bg-amber-500 rounded-full" style="width: 86%"></div>
+              </div>
+            </div>
+            <!-- Lipides -->
+            <div class="bg-rose-50/60 p-3 rounded-2xl border border-rose-100 text-center space-y-1">
+              <span class="text-[10px] font-extrabold text-rose-700 uppercase">Lipides</span>
+              <p class="text-sm font-extrabold text-rose-900">52g <span class="text-[10px] font-medium text-slate-400">/ 70g</span></p>
+              <div class="h-1.5 w-full bg-rose-200 rounded-full overflow-hidden">
+                <div class="h-full bg-rose-500 rounded-full" style="width: 74%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- COMPOSANT 2: FICHE DE PREVISUALISATION IA (REPAS SCANNÉ) -->
+        <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-4 relative overflow-hidden">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-cherry-500 animate-pulse"></span>
+              <h4 class="font-extrabold text-slate-900 text-sm">Détection IA Replicate</h4>
+            </div>
+            <span class="text-[11px] font-bold text-cherry-700 bg-cherry-100 px-2.5 py-0.5 rounded-full">Précision High</span>
+          </div>
+
+          <!-- Repas Détecté Card Item -->
+          <div class="space-y-3">
+            <div class="flex items-center justify-between p-3 bg-cherry-50/50 rounded-2xl border border-cherry-100">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-white shadow-sm flex items-center justify-center text-lg">🍗</div>
+                <div>
+                  <p class="text-xs font-bold text-slate-900">Poulet Grillé & Herbes</p>
+                  <p class="text-[10px] text-slate-400">180g • 298 kcal</p>
+                </div>
+              </div>
+              <span class="text-xs font-extrabold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-lg">42g Prot.</span>
+            </div>
+
+            <div class="flex items-center justify-between p-3 bg-cherry-50/50 rounded-2xl border border-cherry-100">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-white shadow-sm flex items-center justify-center text-lg">🍚</div>
+                <div>
+                  <p class="text-xs font-bold text-slate-900">Riz Basmati Cuit</p>
+                  <p class="text-[10px] text-slate-400">150g • 195 kcal</p>
+                </div>
+              </div>
+              <span class="text-xs font-extrabold text-amber-600 bg-amber-50 px-2 py-1 rounded-lg">44g Gluc.</span>
+            </div>
+          </div>
+
+          <!-- Action Footer -->
+          <div class="pt-2 flex items-center gap-2">
+            <button class="w-full bg-cherry-600 hover:bg-cherry-700 text-white font-bold text-xs py-2.5 rounded-xl shadow-md shadow-cherry-600/20 transition">
+              Valider ce repas (493 kcal)
+            </button>
+            <button class="p-2.5 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-600 transition">
+              <i data-lucide="edit-3" class="w-4 h-4"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- COMPOSANT 3: CARTE COACH IA HEBDOMADAIRE -->
+        <div class="cherry-gradient p-6 rounded-3xl text-white shadow-xl shadow-cherry-900/20 space-y-5 relative overflow-hidden">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <i data-lucide="sparkles" class="w-5 h-5 text-amber-300"></i>
+              <h4 class="font-extrabold text-sm tracking-wide">Coach IA Hebdo</h4>
+            </div>
+            <span class="px-3 py-1 rounded-full bg-white/20 backdrop-blur-md text-xs font-extrabold">Semaine 39</span>
+          </div>
+
+          <!-- Score Big Badge -->
+          <div class="flex items-center gap-4 bg-white/10 p-4 rounded-2xl backdrop-blur-sm border border-white/10">
+            <div class="text-3xl font-black text-white bg-white/20 w-14 h-14 rounded-2xl flex items-center justify-center border border-white/30">
+              88
+            </div>
+            <div>
+              <p class="text-xs text-cherry-100 font-medium">Score de Qualité</p>
+              <p class="text-sm font-bold text-white">Excellente régularité !</p>
+            </div>
+          </div>
+
+          <!-- AI Markdown Advice excerpt -->
+          <div class="text-xs text-cherry-100 leading-relaxed space-y-2">
+            <p class="font-semibold text-white">💡 Conseil de la semaine :</p>
+            <p class="bg-black/20 p-3 rounded-xl backdrop-blur-sm italic">
+              "Vos apports en protéines sont parfaits le midi. Pour optimiser votre récupération, ajoutez 20g de protéines légères le soir (ex: fromage blanc ou poulet)."
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SECTION 4: APERÇU MOCKUP MOBILE (IPHONE VIEWPORT) -->
+    <section id="preview" class="space-y-6 pt-6">
+      <div class="text-center max-w-xl mx-auto space-y-2">
+        <h3 class="text-2xl font-black text-slate-900">Aperçu Mobile de l'Application</h3>
+        <p class="text-xs text-slate-500">Rendu exact de l'écran d'accueil NutriVision AI en mode Smartphone</p>
+      </div>
+
+      <!-- iPhone Frame Center -->
+      <div class="max-w-[390px] mx-auto bg-slate-950 p-4 rounded-[50px] shadow-2xl border-4 border-slate-800 relative">
+        <!-- Dynamic Island -->
+        <div class="w-28 h-5 bg-black rounded-full mx-auto mb-3 flex items-center justify-center">
+          <div class="w-3 h-3 rounded-full bg-slate-900 ml-auto mr-3"></div>
+        </div>
+
+        <!-- Phone Content Screen -->
+        <div class="bg-slate-50 rounded-[38px] overflow-hidden text-slate-900 pb-6 space-y-4 border border-slate-200">
+          
+          <!-- Top App Bar -->
+          <div class="glass-card px-5 py-4 border-b border-cherry-100 flex items-center justify-between sticky top-0 z-20">
+            <div class="flex items-center gap-2">
+              <div class="w-8 h-8 rounded-xl cherry-gradient text-white flex items-center justify-center font-bold text-sm">🍒</div>
+              <span class="font-black text-slate-900 text-sm">NutriVision</span>
+            </div>
+            <div class="w-8 h-8 rounded-full bg-cherry-100 text-cherry-800 font-bold text-xs flex items-center justify-center">
+              JD
+            </div>
+          </div>
+
+          <!-- Screen Body -->
+          <div class="px-5 space-y-4">
+            
+            <!-- Greeting & Quick Status -->
+            <div>
+              <p class="text-xs text-slate-400 font-medium">Lundi 28 Septembre</p>
+              <h4 class="text-lg font-extrabold text-slate-900">Bonjour, Julien 👋</h4>
+            </div>
+
+            <!-- Mobile Calorie Card -->
+            <div class="bg-white p-4 rounded-2xl border border-cherry-100 shadow-sm space-y-3">
+              <div class="flex items-center justify-between text-xs">
+                <span class="font-bold text-slate-700">Calories du jour</span>
+                <span class="font-extrabold text-cherry-600">1 420 / 2 000 kcal</span>
+              </div>
+              <div class="h-2.5 w-full bg-slate-100 rounded-full overflow-hidden">
+                <div class="h-full cherry-gradient rounded-full" style="width: 71%"></div>
+              </div>
+            </div>
+
+            <!-- Big Floating Photo Action Button -->
+            <button class="w-full cherry-gradient text-white font-extrabold py-3.5 px-4 rounded-2xl shadow-lg shadow-cherry-600/30 flex items-center justify-center gap-2 text-sm hover:scale-[1.02] transition transform">
+              <i data-lucide="camera" class="w-5 h-5"></i> Prendre en photo mon repas
+            </button>
+
+            <!-- Meal List Feed -->
+            <div class="space-y-2">
+              <div class="flex items-center justify-between text-xs font-bold text-slate-500 pt-2">
+                <span>Repas enregistrés (2)</span>
+                <span class="text-cherry-600">Voir tout</span>
+              </div>
+
+              <!-- Item 1 -->
+              <div class="bg-white p-3 rounded-2xl border border-slate-100 flex items-center justify-between shadow-xs">
+                <div class="flex items-center gap-3">
+                  <div class="w-10 h-10 rounded-xl bg-cherry-50 text-cherry-700 flex items-center justify-center font-bold text-base">🥑</div>
+                  <div>
+                    <p class="text-xs font-bold text-slate-900">Avocado Toast & Œuf</p>
+                    <p class="text-[10px] text-slate-400">08:30 • Petit-déjeuner</p>
+                  </div>
+                </div>
+                <span class="text-xs font-extrabold text-slate-800">420 kcal</span>
+              </div>
+
+              <!-- Item 2 -->
+              <div class="bg-white p-3 rounded-2xl border border-slate-100 flex items-center justify-between shadow-xs">
+                <div class="flex items-center gap-3">
+                  <div class="w-10 h-10 rounded-xl bg-cherry-50 text-cherry-700 flex items-center justify-center font-bold text-base">🥗</div>
+                  <div>
+                    <p class="text-xs font-bold text-slate-900">Salade Saumon & Quinoa</p>
+                    <p class="text-[10px] text-slate-400">12:45 • Déjeuner</p>
+                  </div>
+                </div>
+                <span class="text-xs font-extrabold text-slate-800">580 kcal</span>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Bottom Navigation Bar -->
+          <div class="glass-card mt-6 px-6 py-3 border-t border-slate-200 flex items-center justify-around text-slate-400">
+            <button class="flex flex-col items-center text-cherry-600">
+              <i data-lucide="home" class="w-5 h-5"></i>
+              <span class="text-[10px] font-bold mt-1">Accueil</span>
+            </button>
+            <button class="flex flex-col items-center hover:text-slate-700">
+              <i data-lucide="bar-chart-2" class="w-5 h-5"></i>
+              <span class="text-[10px] font-medium mt-1">Bilan</span>
+            </button>
+            <button class="flex flex-col items-center hover:text-slate-700">
+              <i data-lucide="user" class="w-5 h-5"></i>
+              <span class="text-[10px] font-medium mt-1">Profil</span>
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>

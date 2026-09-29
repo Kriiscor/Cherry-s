@@ -1,0 +1,6 @@
+{
+  "summary": "Spécifications et architecture de l'application mobile de suivi nutritionnel par IA (NutriVision AI).\nComprend la réponse détaillée sur l'écosystème Apple, le choix de la stack React Native + Expo, Supabase et Gemini Vision API, ainsi que la feuille de route du projet.",
+  "updatedAt": "2026-09-28T14:24:25.095906100Z",
+  "requestFeedback": true,
+  "userFacing": true
+}

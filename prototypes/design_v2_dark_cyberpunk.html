@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NutriVision - Version 2: Dark Cyberpunk Performance ⚡</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: { sans: ['"Space Grotesk"', 'sans-serif'] },
+          colors: {
+            oled: '#08080C',
+            carddark: '#11121A',
+            neoncyan: '#45F3C4',
+            neonmagenta: '#FF0055',
+            neonpurple: '#8B5CF6',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: 'Space Grotesk', sans-serif; background-color: #08080C; color: #F3F4F6; }
+    .neon-glow-cyan { box-shadow: 0 0 25px -5px rgba(69, 243, 196, 0.4); }
+    .neon-glow-magenta { box-shadow: 0 0 25px -5px rgba(255, 0, 85, 0.4); }
+    .glass-dark { background: rgba(17, 18, 26, 0.75); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.08); }
+  </style>
+</head>
+<body class="min-h-screen pb-20">
+
+  <!-- Header Header -->
+  <header class="sticky top-0 z-50 glass-dark border-b border-white/10 px-6 py-4 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-neonmagenta to-neonpurple flex items-center justify-center font-bold text-white shadow-md">
+        ⚡
+      </div>
+      <div>
+        <h1 class="font-bold text-base tracking-wide text-white uppercase">NUTRIVISION <span class="text-xs text-neoncyan font-mono bg-neoncyan/10 px-2 py-0.5 rounded border border-neoncyan/30">V2: CYBERPUNK</span></h1>
+        <p class="text-[11px] text-slate-400 font-mono">High-Tech Bio-Tracker Dashboard</p>
+      </div>
+    </div>
+    <div class="flex items-center gap-2">
+      <span class="text-xs font-mono font-bold text-neoncyan bg-neoncyan/10 border border-neoncyan/30 px-3 py-1 rounded-full animate-pulse">● AI VISION ONLINE</span>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-6 pt-10 space-y-12">
+
+    <!-- HERO HEADER -->
+    <section class="relative bg-gradient-to-r from-carddark via-black to-carddark p-8 sm:p-10 rounded-3xl border border-neonmagenta/30 neon-glow-magenta overflow-hidden">
+      <div class="relative z-10 max-w-xl space-y-4">
+        <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-neonmagenta/20 text-neonmagenta text-xs font-mono font-bold border border-neonmagenta/40">
+          <i data-lucide="zap" class="w-3.5 h-3.5"></i> MODE PERFORMANCE EXTRÊME
+        </span>
+        <h2 class="text-3xl font-extrabold tracking-tight text-white uppercase">Quantifiez chaque calorie. Optimisez vos performances.</h2>
+        <p class="text-xs text-slate-400 font-mono">Interface haute précision pour athlètes et bio-hackers. Contrastes OLED profonds et indicateurs néons instantanés.</p>
+      </div>
+    </section>
+
+    <!-- DASHBOARD VIEWPORT -->
+    <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+      <!-- MAIN GAUGE CYBER -->
+      <div class="bg-carddark p-6 rounded-3xl border border-white/10 space-y-5">
+        <div class="flex justify-between items-center">
+          <div>
+            <p class="text-xs font-mono text-neoncyan uppercase tracking-widest">CALORIC ENGINE</p>
+            <h3 class="text-2xl font-black text-white font-mono">1 890 / 2 400 KCAL</h3>
+          </div>
+          <div class="w-12 h-12 rounded-xl bg-neoncyan/10 text-neoncyan font-mono font-black flex items-center justify-center text-sm border border-neoncyan/40">
+            78%
+          </div>
+        </div>
+
+        <div class="h-3 bg-black rounded-full overflow-hidden p-0.5 border border-white/10">
+          <div class="h-full bg-gradient-to-r from-neoncyan to-neonmagenta rounded-full shadow-lg" style="width: 78%"></div>
+        </div>
+
+        <div class="grid grid-cols-3 gap-2 pt-2">
+          <div class="bg-black/60 p-3 rounded-2xl border border-white/5 text-center">
+            <span class="text-[10px] font-mono text-slate-400 uppercase">PROT</span>
+            <p class="text-sm font-black text-neoncyan font-mono">155G</p>
+          </div>
+          <div class="bg-black/60 p-3 rounded-2xl border border-white/5 text-center">
+            <span class="text-[10px] font-mono text-slate-400 uppercase">GLUC</span>
+            <p class="text-sm font-black text-white font-mono">210G</p>
+          </div>
+          <div class="bg-black/60 p-3 rounded-2xl border border-white/5 text-center">
+            <span class="text-[10px] font-mono text-slate-400 uppercase">LIP</span>
+            <p class="text-sm font-black text-neonmagenta font-mono">58G</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SCAN REPAS CTA CARD -->
+      <div class="bg-carddark p-6 rounded-3xl border border-white/10 flex flex-col justify-between space-y-4">
+        <div>
+          <div class="w-12 h-12 rounded-2xl bg-neonmagenta/10 text-neonmagenta border border-neonmagenta/30 flex items-center justify-center mb-3">
+            <i data-lucide="scan" class="w-6 h-6"></i>
+          </div>
+          <h4 class="font-black text-white text-lg uppercase tracking-wide">SCANNER ASSIETTE IA</h4>
+          <p class="text-xs text-slate-400 font-mono mt-1">Analyse multimodale Replicate instantanée par vision artificielle.</p>
+        </div>
+
+        <button class="w-full bg-gradient-to-r from-neonmagenta to-neonpurple hover:opacity-90 text-white font-black py-3.5 px-4 rounded-2xl transition flex items-center justify-center gap-2 text-xs uppercase tracking-wider neon-glow-magenta">
+          <i data-lucide="crosshair" class="w-4 h-4"></i> DÉCLENCHER SCANNER NEON
+        </button>
+      </div>
+
+      <!-- AI SCORE CARD -->
+      <div class="bg-carddark p-6 rounded-3xl border border-neoncyan/30 neon-glow-cyan space-y-4">
+        <div class="flex justify-between items-center">
+          <span class="px-3 py-1 rounded-full bg-neoncyan/10 text-neoncyan font-mono text-xs font-black border border-neoncyan/30">SCORE IA 96/100</span>
+          <i data-lucide="activity" class="w-5 h-5 text-neoncyan"></i>
+        </div>
+        <h4 class="font-black text-white text-base uppercase">SYNTHÈSE DE PERFORMANCE</h4>
+        <p class="text-xs text-slate-300 font-mono leading-relaxed bg-black/60 p-3 rounded-2xl border border-white/5">
+          "Ratios protéiques optimaux pour l'hypertrophie. Maintien parfait de la fenêtre métabolique post-entraînement."
+        </p>
+      </div>
+
+    </section>
+
+  </main>
+
+  <script>lucide.createIcons();</script>
+</body>
+</html>

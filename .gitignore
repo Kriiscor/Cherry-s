@@ -1,0 +1,37 @@
+# Environment variables (contain live secrets — never commit; .env.example is intentionally kept)
+.env
+.env.local
+.env*.local
+
+# Dependencies
+node_modules/
+.pnp
+.pnp.*
+
+# Next.js build output
+.next/
+out/
+.next-profiles/
+next-env.d.ts
+
+# testing
+/coverage
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# typescript
+*.tsbuildinfo
+
+# vercel
+.vercel
+
+# Session/harness-generated internal data (transcripts, logs — not project source)
+.system_generated/
