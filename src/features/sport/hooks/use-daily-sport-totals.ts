@@ -1,42 +1,26 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
-import { addDays, format, startOfDay } from "date-fns";
-
-import { useUser } from "@/providers/supabase-provider";
-import { createClient } from "@/lib/supabase/client";
-import { dailySportsQueryKey } from "@/features/dashboard/lib/query-keys";
+import { useMemo } from "react";
+import { useDailySports } from "@/features/sport/hooks/use-daily-sports";
 
 /**
  * Total calories burned from sport activities for the given day (TICK-019).
- * Shares the `dailySportsQueryKey` prefix with `useDailySports` so that
- * logging/deleting an activity refreshes both the list and this aggregation.
+ * Optimization: Reuses `useDailySports(date)` instead of firing an independent
+ * Supabase query for the same rows.
  */
 export function useDailySportTotals(date: Date) {
-  const { user } = useUser();
-  const dateISO = format(date, "yyyy-MM-dd");
+  const query = useDailySports(date);
 
-  return useQuery({
-    queryKey: [...dailySportsQueryKey(dateISO), "totals"],
-    queryFn: async (): Promise<number> => {
-      const supabase = createClient();
-      const dayStart = startOfDay(date);
-      const dayEnd = addDays(dayStart, 1);
+  const totalCalories = useMemo(() => {
+    if (!query.data || query.data.length === 0) return 0;
+    return query.data.reduce(
+      (sum, row) => sum + (row.calories_burned ?? 0),
+      0
+    );
+  }, [query.data]);
 
-      const { data, error } = await supabase
-        .from("sports_activities")
-        .select("calories_burned")
-        .eq("user_id", user!.id)
-        .gte("logged_at", dayStart.toISOString())
-        .lt("logged_at", dayEnd.toISOString());
-
-      if (error) throw error;
-
-      return (data ?? []).reduce(
-        (sum, row) => sum + (row.calories_burned ?? 0),
-        0
-      );
-    },
-    enabled: !!user,
-  });
+  return {
+    ...query,
+    data: totalCalories,
+  };
 }

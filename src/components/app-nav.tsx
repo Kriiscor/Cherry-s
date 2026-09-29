@@ -20,6 +20,7 @@ export function AppNav() {
       {/* Cherry's brand mark — visible on wider bottom bars */}
       <Link
         href="/dashboard"
+        prefetch={false}
         className="hidden items-center gap-1.5 px-3 text-xs font-bold text-primary sm:flex"
         aria-label="Cherry's — Accueil"
       >
@@ -33,6 +34,7 @@ export function AppNav() {
           <Link
             key={href}
             href={href}
+            prefetch={false}
             className={cn(
               "flex flex-col items-center gap-1 rounded-xl px-4 py-1.5 text-xs font-medium transition-colors",
               isActive
