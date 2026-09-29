@@ -1,24 +1,28 @@
 "use client";
 
-import { useSyncExternalStore } from "react";
+import { useEffect, useState } from "react";
 
 /**
  * Tracks whether a CSS media query currently matches. Used to switch the
  * meal-capture UI between a bottom `Drawer` (mobile) and a centered
- * `Dialog` (desktop) — see src/features/meals/components/meal-input-drawer.tsx.
+ * `Dialog` (desktop).
  *
- * Returns `false` during SSR/first paint (safe default for mobile-first
- * markup) and syncs to the real value on mount via useSyncExternalStore,
- * which subscribes to matchMedia without the setState-in-effect anti-pattern.
+ * Returns `false` on SSR and first paint (mobile-first default), then
+ * syncs to the real value after mount. Using useState+useEffect instead
+ * of useSyncExternalStore avoids a React 19 hydration mismatch error
+ * (#441) on iOS WebKit when the client snapshot differs from the server
+ * snapshot at reconciliation time.
  */
 export function useMediaQuery(query: string): boolean {
-  return useSyncExternalStore(
-    (onChange) => {
-      const mediaQueryList = window.matchMedia(query);
-      mediaQueryList.addEventListener("change", onChange);
-      return () => mediaQueryList.removeEventListener("change", onChange);
-    },
-    () => window.matchMedia(query).matches,
-    () => false
-  );
+  const [matches, setMatches] = useState(false);
+
+  useEffect(() => {
+    const mediaQueryList = window.matchMedia(query);
+    setMatches(mediaQueryList.matches);
+    const handler = (e: MediaQueryListEvent) => setMatches(e.matches);
+    mediaQueryList.addEventListener("change", handler);
+    return () => mediaQueryList.removeEventListener("change", handler);
+  }, [query]);
+
+  return matches;
 }
