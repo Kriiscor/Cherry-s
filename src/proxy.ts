@@ -51,6 +51,13 @@ export async function proxy(request: NextRequest) {
 
   const { pathname } = request.nextUrl;
 
+  // Next.js server actions are POST requests with a `Next-Action` header.
+  // They must never receive a redirect response — the action itself handles
+  // auth. Pass them straight through after refreshing the session cookie.
+  if (request.headers.has("next-action")) {
+    return supabaseResponse;
+  }
+
   // /reset-password is always public — it handles its own session via the
   // password-recovery code exchange.
   if (pathname.startsWith("/reset-password")) {
