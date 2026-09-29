@@ -16,7 +16,7 @@ export type AddHydrationResult =
  * inserts a `hydration_logs` row scoped to the authenticated user.
  */
 export async function addHydration(
-  input: HydrationValues
+  input: unknown
 ): Promise<AddHydrationResult> {
   try {
     const parsed = hydrationSchema.safeParse(input);

@@ -16,7 +16,7 @@ export type LogSportResult =
  * inserts a `sports_activities` row scoped to the authenticated user.
  */
 export async function logSportActivity(
-  input: SportActivityValues
+  input: unknown
 ): Promise<LogSportResult> {
   try {
     const parsed = sportActivitySchema.safeParse(input);

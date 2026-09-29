@@ -1,5 +1,5 @@
-import DOMPurify from "isomorphic-dompurify";
 import { z } from "zod";
+import { sanitizeText } from "@/lib/sanitize";
 
 /**
  * Client + server validation for logging a body weight entry (TICK-020),
@@ -14,9 +14,7 @@ export const weightLogSchema = z.object({
     .max(300, "Le poids maximum est 300 kg"),
   note: z
     .string()
-    .transform((value) =>
-      DOMPurify.sanitize(value, { ALLOWED_TAGS: [] }).trim() || undefined
-    )
+    .transform((value) => sanitizeText(value) || undefined)
     .optional(),
 });
 

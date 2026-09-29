@@ -1,5 +1,5 @@
-import DOMPurify from "isomorphic-dompurify";
 import { z } from "zod";
+import { sanitizeText } from "@/lib/sanitize";
 
 /**
  * Client + server validation for logging a sport activity (TICK-018),
@@ -12,7 +12,7 @@ import { z } from "zod";
 export const sportActivitySchema = z.object({
   activity_name: z
     .string()
-    .transform((value) => DOMPurify.sanitize(value, { ALLOWED_TAGS: [] }).trim())
+    .transform((value) => sanitizeText(value))
     .pipe(z.string().min(1, "Le nom de l'activité est requis")),
   met_value: z.coerce
     .number({ error: "MET invalide" })

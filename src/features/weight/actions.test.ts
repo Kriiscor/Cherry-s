@@ -4,6 +4,10 @@ vi.mock("@/lib/supabase/server", () => ({
   createClient: vi.fn(),
 }));
 
+vi.mock("next/cache", () => ({
+  revalidatePath: vi.fn(),
+}));
+
 import { createClient } from "@/lib/supabase/server";
 import { logWeight, deleteWeight } from "./actions";
 

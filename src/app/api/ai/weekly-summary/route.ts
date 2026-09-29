@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import DOMPurify from "isomorphic-dompurify";
+import { sanitizeMarkdown } from "@/lib/sanitize";
 import { createClient } from "@/lib/supabase/server";
 import { createRateLimiter } from "@/lib/rate-limit";
 import {
@@ -165,7 +165,7 @@ export async function POST(request: NextRequest) {
       "## Bilan indisponible\n\nLe coaching IA n'a pas pu être généré pour le moment. Réessayez plus tard.";
   }
 
-  const sanitizedMarkdown = DOMPurify.sanitize(aiMarkdown);
+  const sanitizedMarkdown = sanitizeMarkdown(aiMarkdown);
 
   const { data: report, error: upsertError } = await supabase
     .from("weekly_reports")

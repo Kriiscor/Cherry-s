@@ -1,5 +1,5 @@
-import DOMPurify from "isomorphic-dompurify";
 import { z } from "zod";
+import { sanitizeText } from "@/lib/sanitize";
 
 /**
  * Client + server validation for a single editable ingredient row in the
@@ -12,7 +12,7 @@ import { z } from "zod";
 export const mealItemFormSchema = z.object({
   item_name: z
     .string()
-    .transform((value) => DOMPurify.sanitize(value, { ALLOWED_TAGS: [] }).trim())
+    .transform((value) => sanitizeText(value))
     .pipe(z.string().min(1, "Le nom de l'aliment est requis")),
   weight_grams: z.coerce
     .number({ error: "Poids invalide" })

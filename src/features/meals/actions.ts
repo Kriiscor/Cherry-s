@@ -17,7 +17,7 @@ export type SaveMealResult =
  * to strictly adhere to the DB schema constraints (`INT`).
  */
 export async function saveMealAction(
-  input: MealSaveValues
+  input: unknown
 ): Promise<SaveMealResult> {
   try {
     const parsed = mealSaveSchema.safeParse(input);
@@ -120,15 +120,16 @@ export type UpdateMealResult =
  * and replaces its `meal_items` rows. All numerical values are rounded to integer.
  */
 export async function updateMealAction(
-  input: UpdateMealInput
+  input: unknown
 ): Promise<UpdateMealResult> {
   try {
-    const { mealId, meal_type, photo_url, items } = input;
-    if (!mealId || typeof mealId !== "string") {
+    const raw = (typeof input === "object" && input !== null) ? (input as Record<string, unknown>) : {};
+    const mealId = typeof raw.mealId === "string" ? raw.mealId : "";
+    if (!mealId) {
       return { success: false, error: "Identifiant de repas manquant." };
     }
 
-    const parsed = mealSaveSchema.safeParse({ meal_type, photo_url, items });
+    const parsed = mealSaveSchema.safeParse(raw);
     if (!parsed.success) {
       return {
         success: false,
