@@ -18,6 +18,16 @@ import {
   type ForgotPasswordInput,
 } from "@/lib/validators/authSchema";
 
+/**
+ * Only allow same-origin, absolute internal paths (e.g. `/dashboard`) as a
+ * post-login redirect target — rejecting protocol-relative (`//evil.com`) and
+ * backslash tricks — to prevent open-redirect abuse of the `redirectTo` param.
+ */
+function sanitizeRedirect(value: string | null): string {
+  if (value && /^\/(?![/\\])/.test(value)) return value;
+  return "/dashboard";
+}
+
 function ForgotPasswordForm({ onBack }: { onBack: () => void }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [sent, setSent] = useState(false);
@@ -123,7 +133,8 @@ export function LoginForm() {
         return;
       }
 
-      router.push("/dashboard");
+      const params = new URLSearchParams(window.location.search);
+      router.push(sanitizeRedirect(params.get("redirectTo")));
     } catch {
       toast.error("Une erreur est survenue, veuillez réessayer");
     } finally {

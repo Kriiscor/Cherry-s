@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -21,7 +21,7 @@ import { CherryLogo } from "@/components/ui/cherry-logo";
 import { createClient } from "@/lib/supabase/client";
 import { resetPasswordSchema, type ResetPasswordInput } from "@/lib/validators/authSchema";
 
-export default function ResetPasswordPage() {
+function ResetPasswordForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -151,5 +151,24 @@ export default function ResetPasswordPage() {
         </CardContent>
       </Card>
     </main>
+  );
+}
+
+/**
+ * `useSearchParams()` forces this page to opt out of static prerendering, so
+ * the params-reading form is isolated behind a Suspense boundary (required by
+ * Next.js at build time) with a loading fallback.
+ */
+export default function ResetPasswordPage() {
+  return (
+    <Suspense
+      fallback={
+        <main className="flex min-h-screen items-center justify-center p-4">
+          <Loader2 className="size-6 animate-spin text-muted-foreground" />
+        </main>
+      }
+    >
+      <ResetPasswordForm />
+    </Suspense>
   );
 }

@@ -278,7 +278,7 @@ export function MealInputDrawer() {
       ) : (
         <Drawer open={open} onOpenChange={handleOpenChange}>
           <DrawerTrigger asChild>{triggerButton}</DrawerTrigger>
-          <DrawerContent>
+          <DrawerContent className="flex flex-col max-h-[90dvh]">
             <DrawerHeader>
               <DrawerTitle>Nouveau repas</DrawerTitle>
               <DrawerDescription>
@@ -286,7 +286,9 @@ export function MealInputDrawer() {
                 IA.
               </DrawerDescription>
             </DrawerHeader>
-            {captureContent}
+            <div className="flex-1 overflow-y-auto overscroll-contain">
+              {captureContent}
+            </div>
             <DrawerFooter>{analyzeButton}</DrawerFooter>
           </DrawerContent>
         </Drawer>
