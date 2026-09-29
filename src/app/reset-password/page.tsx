@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
@@ -23,7 +23,10 @@ import { resetPasswordSchema, type ResetPasswordInput } from "@/lib/validators/a
 
 export default function ResetPasswordPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [sessionReady, setSessionReady] = useState(false);
+  const [sessionError, setSessionError] = useState(false);
 
   const {
     register,
@@ -33,6 +36,32 @@ export default function ResetPasswordPage() {
     resolver: zodResolver(resetPasswordSchema),
     mode: "onChange",
   });
+
+  // Exchange the PKCE code from the URL for a valid session
+  useEffect(() => {
+    const code = searchParams.get("code");
+    if (!code) {
+      // No code — maybe already has a session (edge case)
+      const supabase = createClient();
+      supabase.auth.getSession().then(({ data }) => {
+        if (data.session) {
+          setSessionReady(true);
+        } else {
+          setSessionError(true);
+        }
+      });
+      return;
+    }
+
+    const supabase = createClient();
+    supabase.auth.exchangeCodeForSession(code).then(({ error }) => {
+      if (error) {
+        setSessionError(true);
+      } else {
+        setSessionReady(true);
+      }
+    });
+  }, [searchParams]);
 
   async function onSubmit(values: ResetPasswordInput) {
     setIsSubmitting(true);
@@ -67,42 +96,58 @@ export default function ResetPasswordPage() {
           <CardDescription>Choisissez un nouveau mot de passe.</CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4" noValidate>
-            <div className="flex flex-col gap-1.5">
-              <Label htmlFor="new-password">Nouveau mot de passe</Label>
-              <Input
-                id="new-password"
-                type="password"
-                autoComplete="new-password"
-                placeholder="••••••••"
-                aria-invalid={!!errors.password}
-                {...register("password")}
-              />
-              {errors.password && (
-                <p className="text-sm text-destructive">{errors.password.message}</p>
-              )}
+          {sessionError ? (
+            <div className="flex flex-col gap-4 text-center">
+              <p className="text-sm text-destructive">
+                Le lien a expiré ou est invalide. Veuillez refaire une demande de
+                réinitialisation.
+              </p>
+              <Button variant="outline" onClick={() => router.push("/login")}>
+                Retour à la connexion
+              </Button>
             </div>
-
-            <div className="flex flex-col gap-1.5">
-              <Label htmlFor="confirm-password">Confirmer le mot de passe</Label>
-              <Input
-                id="confirm-password"
-                type="password"
-                autoComplete="new-password"
-                placeholder="••••••••"
-                aria-invalid={!!errors.confirmPassword}
-                {...register("confirmPassword")}
-              />
-              {errors.confirmPassword && (
-                <p className="text-sm text-destructive">{errors.confirmPassword.message}</p>
-              )}
+          ) : !sessionReady ? (
+            <div className="flex justify-center py-6">
+              <Loader2 className="size-6 animate-spin text-muted-foreground" />
             </div>
+          ) : (
+            <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4" noValidate>
+              <div className="flex flex-col gap-1.5">
+                <Label htmlFor="new-password">Nouveau mot de passe</Label>
+                <Input
+                  id="new-password"
+                  type="password"
+                  autoComplete="new-password"
+                  placeholder="••••••••"
+                  aria-invalid={!!errors.password}
+                  {...register("password")}
+                />
+                {errors.password && (
+                  <p className="text-sm text-destructive">{errors.password.message}</p>
+                )}
+              </div>
 
-            <Button type="submit" disabled={isSubmitting} className="mt-2 w-full">
-              {isSubmitting && <Loader2 className="size-4 animate-spin" />}
-              Mettre à jour le mot de passe
-            </Button>
-          </form>
+              <div className="flex flex-col gap-1.5">
+                <Label htmlFor="confirm-password">Confirmer le mot de passe</Label>
+                <Input
+                  id="confirm-password"
+                  type="password"
+                  autoComplete="new-password"
+                  placeholder="••••••••"
+                  aria-invalid={!!errors.confirmPassword}
+                  {...register("confirmPassword")}
+                />
+                {errors.confirmPassword && (
+                  <p className="text-sm text-destructive">{errors.confirmPassword.message}</p>
+                )}
+              </div>
+
+              <Button type="submit" disabled={isSubmitting} className="mt-2 w-full">
+                {isSubmitting && <Loader2 className="size-4 animate-spin" />}
+                Mettre à jour le mot de passe
+              </Button>
+            </form>
+          )}
         </CardContent>
       </Card>
     </main>

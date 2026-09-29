@@ -37,6 +37,11 @@ export async function middleware(request: NextRequest) {
     pathname.startsWith("/settings") ||
     pathname.startsWith("/onboarding");
 
+  // /reset-password is always public — it handles its own session via code exchange
+  if (pathname.startsWith("/reset-password")) {
+    return supabaseResponse;
+  }
+
   const isAuthPage = pathname.startsWith("/login");
 
   if (isProtected && !user) {
