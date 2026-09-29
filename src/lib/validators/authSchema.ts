@@ -29,3 +29,27 @@ export const registerSchema = z.object({
 });
 
 export type RegisterInput = z.infer<typeof registerSchema>;
+
+export const forgotPasswordSchema = z.object({
+  email: z.string().min(1, "L'email est requis").email("Email invalide"),
+});
+
+export type ForgotPasswordInput = z.infer<typeof forgotPasswordSchema>;
+
+export const resetPasswordSchema = z
+  .object({
+    password: z
+      .string()
+      .min(1, "Le mot de passe est requis")
+      .regex(
+        /^(?=.*[A-Za-z])(?=.*\d).{8,}$/,
+        "Le mot de passe doit contenir au moins 8 caractères, une lettre et un chiffre"
+      ),
+    confirmPassword: z.string().min(1, "La confirmation est requise"),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Les mots de passe ne correspondent pas",
+    path: ["confirmPassword"],
+  });
+
+export type ResetPasswordInput = z.infer<typeof resetPasswordSchema>;
