@@ -4,7 +4,8 @@ import { useMemo, useState, useTransition } from "react";
 import { Loader2, Plus, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
-import { saveMealAction } from "@/features/meals/actions";
+import { useQueryClient } from "@tanstack/react-query";
+import { saveMealAction, updateMealAction } from "@/features/meals/actions";
 import { MEAL_TYPE_OPTIONS, type MealType } from "@/features/meals/types";
 import { mealItemFormSchema, type MealSaveValues } from "@/lib/validators/mealItemSchema";
 import type { MealItem } from "@/lib/validators/aiMealSchema";
@@ -67,6 +68,7 @@ const EMPTY_DRAFT: NewItemDraft = {
 type MealEditModalProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  mealId?: string;
   items: MealItem[];
   mealType: MealType;
   photoUrl: string | null;
@@ -74,35 +76,36 @@ type MealEditModalProps = {
 };
 
 function round1(value: number): number {
-  return Math.round(value * 10) / 10;
+  return Math.round(value);
 }
 
 function itemsToRows(items: MealItem[]): EditableRow[] {
   return items.map((item) => ({
     id: crypto.randomUUID(),
     item_name: item.item_name,
-    weight_grams: item.weight_grams,
-    calories: item.calories,
-    protein: item.protein,
-    carbs: item.carbs,
-    fat: item.fat,
-    originalWeight: item.weight_grams,
-    originalCalories: item.calories,
-    originalProtein: item.protein,
-    originalCarbs: item.carbs,
-    originalFat: item.fat,
+    weight_grams: Math.round(item.weight_grams),
+    calories: Math.round(item.calories),
+    protein: Math.round(item.protein),
+    carbs: Math.round(item.carbs),
+    fat: Math.round(item.fat),
+    originalWeight: Math.round(item.weight_grams),
+    originalCalories: Math.round(item.calories),
+    originalProtein: Math.round(item.protein),
+    originalCarbs: Math.round(item.carbs),
+    originalFat: Math.round(item.fat),
   }));
 }
 
 function recalcForWeight(row: EditableRow, newWeight: number): EditableRow {
-  const scale = row.originalWeight > 0 ? newWeight / row.originalWeight : 0;
+  const roundedWeight = Math.round(newWeight);
+  const scale = row.originalWeight > 0 ? roundedWeight / row.originalWeight : 0;
   return {
     ...row,
-    weight_grams: newWeight,
-    calories: round1(row.originalCalories * scale),
-    protein: round1(row.originalProtein * scale),
-    carbs: round1(row.originalCarbs * scale),
-    fat: round1(row.originalFat * scale),
+    weight_grams: roundedWeight,
+    calories: Math.round(row.originalCalories * scale),
+    protein: Math.round(row.originalProtein * scale),
+    carbs: Math.round(row.originalCarbs * scale),
+    fat: Math.round(row.originalFat * scale),
   };
 }
 
@@ -116,11 +119,13 @@ function recalcForWeight(row: EditableRow, newWeight: number): EditableRow {
 export function MealEditModal({
   open,
   onOpenChange,
+  mealId,
   items,
   mealType,
   photoUrl,
   onSaved,
 }: MealEditModalProps) {
+  const queryClient = useQueryClient();
   const [rows, setRows] = useState<EditableRow[]>(() => itemsToRows(items));
   const [draft, setDraft] = useState<NewItemDraft>(EMPTY_DRAFT);
   const [selectedMealType, setSelectedMealType] = useState<MealType>(mealType);
@@ -239,12 +244,17 @@ export function MealEditModal({
     };
 
     startSaving(async () => {
-      const result = await saveMealAction(payload);
+      const result = mealId
+        ? await updateMealAction({ mealId, ...payload })
+        : await saveMealAction(payload);
+
       if (!result.success) {
         toast.error(result.error);
         return;
       }
-      toast.success("Repas enregistré !");
+      queryClient.invalidateQueries({ queryKey: ["meals"] });
+      queryClient.invalidateQueries({ queryKey: ["daily-totals"] });
+      toast.success(mealId ? "Repas modifié avec succès !" : "Repas enregistré !");
       onSaved?.(result.mealId);
       onOpenChange(false);
     });

@@ -4,10 +4,16 @@ vi.mock("@/lib/supabase/server", () => ({
   createClient: vi.fn(),
 }));
 
+vi.mock("next/cache", () => ({
+  revalidatePath: vi.fn(),
+}));
+
 import { createClient } from "@/lib/supabase/server";
-import { saveMealAction } from "./actions";
+import { revalidatePath } from "next/cache";
+import { saveMealAction, updateMealAction } from "./actions";
 
 const mockedCreateClient = vi.mocked(createClient);
+const mockedRevalidatePath = vi.mocked(revalidatePath);
 
 type MockUser = { id: string } | null;
 
@@ -15,12 +21,16 @@ interface MockSupabaseOptions {
   user: MockUser;
   mealInsertError?: { message: string } | null;
   itemsInsertError?: { message: string } | null;
+  mealUpdateError?: { message: string } | null;
+  itemsDeleteError?: { message: string } | null;
 }
 
 function createSupabaseMock({
   user,
   mealInsertError = null,
   itemsInsertError = null,
+  mealUpdateError = null,
+  itemsDeleteError = null,
 }: MockSupabaseOptions) {
   const deleteEq = vi.fn().mockResolvedValue({ data: null, error: null });
   const mealsDelete = vi.fn(() => ({ eq: deleteEq }));
@@ -33,6 +43,19 @@ function createSupabaseMock({
   const mealsInsertSelect = vi.fn(() => ({ single: mealsInsertSingle }));
   const mealsInsert = vi.fn(() => ({ select: mealsInsertSelect }));
 
+  const mealUpdateUserEq = vi.fn().mockResolvedValue({
+    data: null,
+    error: mealUpdateError,
+  });
+  const mealUpdateIdEq = vi.fn(() => ({ eq: mealUpdateUserEq }));
+  const mealsUpdate = vi.fn(() => ({ eq: mealUpdateIdEq }));
+
+  const itemsDeleteMealEq = vi.fn().mockResolvedValue({
+    data: null,
+    error: itemsDeleteError,
+  });
+  const itemsDelete = vi.fn(() => ({ eq: itemsDeleteMealEq }));
+
   const itemsInsert = vi.fn().mockResolvedValue({
     data: null,
     error: itemsInsertError,
@@ -44,14 +67,21 @@ function createSupabaseMock({
     },
     from: vi.fn((table: string) => {
       if (table === "meals") {
-        return { insert: mealsInsert, delete: mealsDelete };
+        return { insert: mealsInsert, delete: mealsDelete, update: mealsUpdate };
       }
       if (table === "meal_items") {
-        return { insert: itemsInsert };
+        return { insert: itemsInsert, delete: itemsDelete };
       }
       throw new Error(`Unexpected table: ${table}`);
     }),
-    __mocks: { deleteEq, mealsDelete, mealsInsert, itemsInsert },
+    __mocks: {
+      deleteEq,
+      mealsDelete,
+      mealsInsert,
+      mealsUpdate,
+      itemsDelete,
+      itemsInsert,
+    },
   };
 }
 
@@ -136,6 +166,7 @@ describe("saveMealAction", () => {
         fat: 8,
       }),
     ]);
+    expect(mockedRevalidatePath).toHaveBeenCalledWith("/dashboard");
   });
 
   it("defaults photo_url to null when omitted", async () => {
@@ -186,5 +217,33 @@ describe("saveMealAction", () => {
     });
     expect(supabaseMock.__mocks.mealsDelete).toHaveBeenCalled();
     expect(supabaseMock.__mocks.deleteEq).toHaveBeenCalledWith("id", "meal-123");
+  });
+});
+
+describe("updateMealAction", () => {
+  it("rejects when mealId is missing", async () => {
+    const result = await updateMealAction({
+      mealId: "",
+      ...validInput,
+    });
+    expect(result.success).toBe(false);
+  });
+
+  it("updates meal and replaces items on success", async () => {
+    const supabaseMock = createSupabaseMock({ user: { id: "user-1" } });
+    mockedCreateClient.mockResolvedValue(
+      supabaseMock as unknown as Awaited<ReturnType<typeof createClient>>
+    );
+
+    const result = await updateMealAction({
+      mealId: "meal-999",
+      ...validInput,
+    });
+
+    expect(result).toEqual({ success: true, mealId: "meal-999" });
+    expect(supabaseMock.__mocks.mealsUpdate).toHaveBeenCalled();
+    expect(supabaseMock.__mocks.itemsDelete).toHaveBeenCalled();
+    expect(supabaseMock.__mocks.itemsInsert).toHaveBeenCalled();
+    expect(mockedRevalidatePath).toHaveBeenCalledWith("/dashboard");
   });
 });

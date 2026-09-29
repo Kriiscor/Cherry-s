@@ -438,6 +438,7 @@ export function MealDetailModal({
         <MealEditModal
           open={editOpen}
           onOpenChange={setEditOpen}
+          mealId={meal.id}
           items={meal.meal_items.map((item) => ({
             item_name: item.item_name,
             weight_grams: item.weight_grams,

@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import {
   hydrationSchema,
@@ -17,44 +18,53 @@ export type AddHydrationResult =
 export async function addHydration(
   input: HydrationValues
 ): Promise<AddHydrationResult> {
-  const parsed = hydrationSchema.safeParse(input);
-  if (!parsed.success) {
+  try {
+    const parsed = hydrationSchema.safeParse(input);
+    if (!parsed.success) {
+      return {
+        success: false,
+        error: parsed.error.issues[0]?.message ?? "Quantité d'eau invalide.",
+      };
+    }
+
+    const supabase = await createClient();
+
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
+
+    if (authError || !user) {
+      return {
+        success: false,
+        error: "Vous devez être connecté pour enregistrer votre hydratation.",
+      };
+    }
+
+    const { data, error } = await supabase
+      .from("hydration_logs")
+      .insert({
+        user_id: user.id,
+        amount_ml: Math.round(parsed.data.amount_ml),
+        logged_at: new Date().toISOString(),
+      })
+      .select("id")
+      .single();
+
+    if (error || !data) {
+      return {
+        success: false,
+        error: "Impossible d'enregistrer l'hydratation. Réessaie plus tard.",
+      };
+    }
+
+    revalidatePath("/dashboard");
+    return { success: true, logId: data.id };
+  } catch (error) {
+    console.error("[addHydration] Erreur inattendue:", error);
     return {
       success: false,
-      error: parsed.error.issues[0]?.message ?? "Quantité d'eau invalide.",
+      error: "Une erreur inattendue est survenue lors de l'enregistrement.",
     };
   }
-
-  const supabase = await createClient();
-
-  const {
-    data: { user },
-    error: authError,
-  } = await supabase.auth.getUser();
-
-  if (authError || !user) {
-    return {
-      success: false,
-      error: "Vous devez être connecté pour enregistrer votre hydratation.",
-    };
-  }
-
-  const { data, error } = await supabase
-    .from("hydration_logs")
-    .insert({
-      user_id: user.id,
-      amount_ml: parsed.data.amount_ml,
-      logged_at: new Date().toISOString(),
-    })
-    .select("id")
-    .single();
-
-  if (error || !data) {
-    return {
-      success: false,
-      error: "Impossible d'enregistrer l'hydratation. Réessaie plus tard.",
-    };
-  }
-
-  return { success: true, logId: data.id };
 }
