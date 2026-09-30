@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
+import { Apple, Calculator, Dumbbell } from "lucide-react";
 
 import { DailyGauges } from "@/features/dashboard/components/daily-gauges";
 import { NetCalorieCard } from "@/features/dashboard/components/net-calorie-card";
@@ -12,13 +13,24 @@ import { DailySportList } from "@/features/sport/components/daily-sport-list";
 import { useMealsRealtimeSync } from "@/features/dashboard/hooks/use-meals-realtime-sync";
 import { MealInputDrawer } from "@/features/meals/components/meal-input-drawer";
 
-/**
- * Dashboard home (TICK-011 + TICK-012): daily calorie/macro gauges above the
- * day's meal timeline, both scoped to the same viewed `date`, plus the
- * floating meal-capture entry point. `useMealsRealtimeSync` is mounted once
- * here so both children's queries (sharing the `["meals", "daily", ...]` key
- * prefix) refresh together when a meal is added, edited, or removed.
- */
+function SectionDivider({
+  icon: Icon,
+  label,
+}: {
+  icon: React.ElementType;
+  label: string;
+}) {
+  return (
+    <div className="flex items-center gap-3 pt-2">
+      <div className="flex size-7 items-center justify-center rounded-lg bg-primary/10">
+        <Icon className="size-4 text-primary" />
+      </div>
+      <span className="text-sm font-bold text-foreground">{label}</span>
+      <div className="h-px flex-1 bg-border" />
+    </div>
+  );
+}
+
 export default function DashboardPage() {
   const [date, setDate] = useState(() => new Date());
 
@@ -33,11 +45,16 @@ export default function DashboardPage() {
         </h1>
       </header>
 
+      <SectionDivider icon={Apple} label="Nutrition" />
       <DailyGauges date={date} />
-      <NetCalorieCard date={date} />
       <HydrationTrackerCard date={date} />
-      <DailySportList date={date} />
       <MealTimeline date={date} onDateChange={setDate} />
+
+      <SectionDivider icon={Dumbbell} label="Sport" />
+      <DailySportList date={date} />
+
+      <SectionDivider icon={Calculator} label="Bilan net" />
+      <NetCalorieCard date={date} />
 
       <MealInputDrawer />
     </div>
