@@ -10,6 +10,7 @@ import { NetCalorieCard } from "@/features/dashboard/components/net-calorie-card
 import { MealTimeline } from "@/features/dashboard/components/meal-timeline";
 import { HydrationTrackerCard } from "@/features/hydration/components/hydration-tracker-card";
 import { DailySportList } from "@/features/sport/components/daily-sport-list";
+import { StepsTrackerCard } from "@/features/sport/components/steps-tracker-card";
 import { useMealsRealtimeSync } from "@/features/dashboard/hooks/use-meals-realtime-sync";
 import { MealInputDrawer } from "@/features/meals/components/meal-input-drawer";
 
@@ -51,6 +52,7 @@ export default function DashboardPage() {
       <MealTimeline date={date} onDateChange={setDate} />
 
       <SectionDivider icon={Dumbbell} label="Sport" />
+      <StepsTrackerCard date={date} />
       <DailySportList date={date} />
 
       <SectionDivider icon={Calculator} label="Bilan net" />

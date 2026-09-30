@@ -270,6 +270,27 @@ export type Database = {
         };
         Relationships: [];
       };
+      daily_steps: {
+        Row: {
+          id: string;
+          user_id: string;
+          step_count: number;
+          logged_date: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          step_count: number;
+          logged_date?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string;
+          step_count?: number;
+          logged_date?: string;
+        };
+        Relationships: [];
+      };
     };
     Views: {
       [_ in never]: never;

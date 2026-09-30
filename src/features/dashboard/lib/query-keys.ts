@@ -40,3 +40,8 @@ export function weightLogsQueryKey(userId: string | undefined) {
 export function dailyHydrationQueryKey(dateISO: string) {
   return ["hydration", "daily", dateISO] as const;
 }
+
+/** Daily step count for a given day. */
+export function dailyStepsQueryKey(dateISO: string) {
+  return ["steps", "daily", dateISO] as const;
+}

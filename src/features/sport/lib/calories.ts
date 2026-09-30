@@ -13,3 +13,17 @@ export function estimateCaloriesBurned(
   if (met <= 0 || weightKg <= 0 || durationMinutes <= 0) return 0;
   return Math.round(met * weightKg * (durationMinutes / 60));
 }
+
+/**
+ * Estimated calories burned from daily steps.
+ * Formula: steps × weight(kg) × 0.00045
+ * Gives ~315 kcal for 10 000 steps at 70 kg — consistent with published
+ * pedometry energy-expenditure tables.
+ */
+export function estimateCaloriesFromSteps(
+  steps: number,
+  weightKg: number
+): number {
+  if (steps <= 0 || weightKg <= 0) return 0;
+  return Math.round(steps * weightKg * 0.00045);
+}
