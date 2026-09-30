@@ -11,6 +11,8 @@ export type WeeklyTrendDay = {
   carbs: number;
   fat: number;
   target_calories: number;
+  step_count: number;
+  steps_goal: number;
 };
 
 const MS_PER_DAY = 24 * 60 * 60 * 1000;
@@ -41,7 +43,7 @@ async function fetchWeeklyTrends(userId: string): Promise<WeeklyTrendDay[]> {
     new Date(`${dayKeys[dayKeys.length - 1]}T00:00:00.000Z`).getTime() + MS_PER_DAY
   ).toISOString();
 
-  const [mealsResult, goalsResult] = await Promise.all([
+  const [mealsResult, goalsResult, stepsResult] = await Promise.all([
     supabase
       .from("meals")
       .select("total_calories, total_protein, total_carbs, total_fat, logged_at")
@@ -50,19 +52,28 @@ async function fetchWeeklyTrends(userId: string): Promise<WeeklyTrendDay[]> {
       .lt("logged_at", rangeEndIso),
     supabase
       .from("user_goals")
-      .select("daily_calories")
+      .select("daily_calories, daily_steps_goal")
       .eq("user_id", userId)
       .maybeSingle(),
+    supabase
+      .from("daily_steps")
+      .select("step_count, logged_date")
+      .eq("user_id", userId)
+      .gte("logged_date", dayKeys[0])
+      .lte("logged_date", dayKeys[dayKeys.length - 1]),
   ]);
 
-  if (mealsResult.error) {
-    throw mealsResult.error;
-  }
-  if (goalsResult.error) {
-    throw goalsResult.error;
-  }
+  if (mealsResult.error) throw mealsResult.error;
+  if (goalsResult.error) throw goalsResult.error;
+  if (stepsResult.error) throw stepsResult.error;
 
   const targetCalories = goalsResult.data?.daily_calories ?? 0;
+  const stepsGoal = goalsResult.data?.daily_steps_goal ?? 10000;
+
+  const stepsByDay = new Map<string, number>();
+  for (const row of stepsResult.data ?? []) {
+    stepsByDay.set(row.logged_date, row.step_count);
+  }
 
   type DayTotals = {
     calories: number;
@@ -102,6 +113,8 @@ async function fetchWeeklyTrends(userId: string): Promise<WeeklyTrendDay[]> {
       carbs: totals.carbs,
       fat: totals.fat,
       target_calories: targetCalories,
+      step_count: stepsByDay.get(date) ?? 0,
+      steps_goal: stepsGoal,
     };
   });
 }

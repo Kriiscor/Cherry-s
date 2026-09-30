@@ -22,7 +22,7 @@ import {
 } from "@/components/ui/chart";
 import { useWeeklyTrends } from "@/features/analytics/hooks/use-weekly-trends";
 
-type TrendView = "calories" | "protein";
+type TrendView = "calories" | "protein" | "steps";
 
 const chartConfig = {
   calories: {
@@ -32,6 +32,10 @@ const chartConfig = {
   protein: {
     label: "Protéines",
     color: "var(--color-emerald-500)",
+  },
+  step_count: {
+    label: "Pas",
+    color: "var(--color-violet-500)",
   },
 } satisfies ChartConfig;
 
@@ -59,6 +63,7 @@ export function WeeklyTrendsChart() {
   );
 
   const targetCalories = data?.[0]?.target_calories ?? 0;
+  const stepsGoal = data?.[0]?.steps_goal ?? 10000;
 
   return (
     <Card>
@@ -77,6 +82,7 @@ export function WeeklyTrendsChart() {
           <TabsList>
             <TabsTrigger value="calories">Calories</TabsTrigger>
             <TabsTrigger value="protein">Protéines</TabsTrigger>
+            <TabsTrigger value="steps">Pas</TabsTrigger>
           </TabsList>
 
           <TabsContent value="calories">
@@ -144,6 +150,56 @@ export function WeeklyTrendsChart() {
                   <Bar
                     dataKey="protein"
                     fill="var(--color-protein)"
+                    radius={[4, 4, 0, 0]}
+                  />
+                </BarChart>
+              </ChartContainer>
+            )}
+          </TabsContent>
+
+          <TabsContent value="steps">
+            {isLoading ? (
+              <Skeleton className="h-64 w-full" />
+            ) : isError ? (
+              <p className="py-8 text-center text-sm text-muted-foreground">
+                Impossible de charger les tendances pour le moment.
+              </p>
+            ) : (
+              <ChartContainer config={chartConfig} className="h-64 w-full">
+                <BarChart data={chartData} margin={{ left: 0, right: 8, top: 8 }}>
+                  <CartesianGrid vertical={false} />
+                  <XAxis
+                    dataKey="label"
+                    tickLine={false}
+                    axisLine={false}
+                    tickMargin={8}
+                  />
+                  <YAxis
+                    tickLine={false}
+                    axisLine={false}
+                    width={44}
+                    tickFormatter={(v: number) =>
+                      v >= 1000 ? `${v / 1000}k` : String(v)
+                    }
+                  />
+                  <ChartTooltip content={<ChartTooltipContent indicator="dot" />} />
+                  {stepsGoal > 0 && (
+                    <ReferenceLine
+                      y={stepsGoal}
+                      stroke="var(--color-emerald-500)"
+                      strokeDasharray="4 4"
+                      strokeWidth={2}
+                      label={{
+                        value: `Objectif ${stepsGoal.toLocaleString("fr-FR")} pas`,
+                        position: "insideTopRight",
+                        fill: "var(--muted-foreground)",
+                        fontSize: 11,
+                      }}
+                    />
+                  )}
+                  <Bar
+                    dataKey="step_count"
+                    fill="var(--color-step_count)"
                     radius={[4, 4, 0, 0]}
                   />
                 </BarChart>
