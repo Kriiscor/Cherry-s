@@ -55,6 +55,8 @@ export type Database = {
             | "active"
             | "very_active";
           goal_type: "lose" | "maintain" | "gain";
+          daily_steps_goal: number;
+          daily_water_ml: number;
           updated_at: string;
         };
         Insert: {
@@ -75,6 +77,8 @@ export type Database = {
             | "active"
             | "very_active";
           goal_type: "lose" | "maintain" | "gain";
+          daily_steps_goal?: number;
+          daily_water_ml?: number;
           updated_at?: string;
         };
         Update: {
@@ -95,6 +99,8 @@ export type Database = {
             | "active"
             | "very_active";
           goal_type?: "lose" | "maintain" | "gain";
+          daily_steps_goal?: number;
+          daily_water_ml?: number;
           updated_at?: string;
         };
         Relationships: [];

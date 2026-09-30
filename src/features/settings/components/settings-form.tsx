@@ -485,6 +485,53 @@ export function SettingsForm({ defaultValues }: SettingsFormProps) {
                 </div>
               </div>
 
+              <div className="h-px bg-border" />
+
+              {/* Section Objectifs sport & hydratation */}
+              <div className="flex flex-col gap-4">
+                <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+                  Sport & Hydratation
+                </h2>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="flex flex-col gap-1.5">
+                    <Label htmlFor="dailyStepsGoal">Objectif pas / jour</Label>
+                    <Input
+                      id="dailyStepsGoal"
+                      type="number"
+                      step="500"
+                      inputMode="numeric"
+                      placeholder="10000"
+                      aria-invalid={!!errors.dailyStepsGoal}
+                      {...register("dailyStepsGoal", { valueAsNumber: true })}
+                    />
+                    {errors.dailyStepsGoal && (
+                      <p className="text-xs text-destructive">
+                        {errors.dailyStepsGoal.message}
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="flex flex-col gap-1.5">
+                    <Label htmlFor="dailyWaterMl">Objectif eau / jour (ml)</Label>
+                    <Input
+                      id="dailyWaterMl"
+                      type="number"
+                      step="250"
+                      inputMode="numeric"
+                      placeholder="2500"
+                      aria-invalid={!!errors.dailyWaterMl}
+                      {...register("dailyWaterMl", { valueAsNumber: true })}
+                    />
+                    {errors.dailyWaterMl && (
+                      <p className="text-xs text-destructive">
+                        {errors.dailyWaterMl.message}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </div>
+
               <Button type="submit" disabled={isPending} className="mt-2 w-full">
                 {isPending && <Loader2 className="size-4 animate-spin" />}
                 Enregistrer

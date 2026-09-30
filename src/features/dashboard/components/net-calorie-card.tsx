@@ -4,7 +4,9 @@ import { Calculator } from "lucide-react";
 
 import { useDailyTotals } from "@/features/dashboard/hooks/use-daily-totals";
 import { useDailySportTotals } from "@/features/sport/hooks/use-daily-sport-totals";
+import { useDailySteps } from "@/features/sport/hooks/use-daily-steps";
 import { useUserGoals } from "@/features/dashboard/hooks/use-user-goals";
+import { estimateCaloriesFromSteps } from "@/features/sport/lib/calories";
 
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
@@ -27,13 +29,17 @@ const DEFAULT_DAILY_CALORIES = 2000;
 export function NetCalorieCard({ date }: NetCalorieCardProps) {
   const mealsQuery = useDailyTotals(date);
   const sportQuery = useDailySportTotals(date);
+  const stepsQuery = useDailySteps(date);
   const goalsQuery = useUserGoals();
 
   const isLoading =
-    mealsQuery.isPending || sportQuery.isPending || goalsQuery.isPending;
+    mealsQuery.isPending || sportQuery.isPending || stepsQuery.isPending || goalsQuery.isPending;
 
+  const weightKg = goalsQuery.data?.weight_kg ?? 70;
   const caloriesEaten = mealsQuery.data?.calories ?? 0;
-  const caloriesBurned = sportQuery.data ?? 0;
+  const sportCalories = sportQuery.data ?? 0;
+  const stepCalories = estimateCaloriesFromSteps(stepsQuery.data ?? 0, weightKg);
+  const caloriesBurned = sportCalories + stepCalories;
   const netCalories = Math.max(0, caloriesEaten - caloriesBurned);
   const targetCalories = goalsQuery.data?.daily_calories ?? DEFAULT_DAILY_CALORIES;
   const percentage =

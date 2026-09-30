@@ -41,6 +41,16 @@ export const settingsSchema = z.object({
   fatGrams: z
     .number({ error: "Les lipides sont requis" })
     .nonnegative("Les lipides doivent être positifs ou nuls"),
+  dailyStepsGoal: z
+    .number({ error: "L'objectif de pas est requis" })
+    .int()
+    .min(1000, "Minimum 1 000 pas")
+    .max(100000, "Maximum 100 000 pas"),
+  dailyWaterMl: z
+    .number({ error: "L'objectif d'hydratation est requis" })
+    .int()
+    .min(500, "Minimum 500 ml")
+    .max(10000, "Maximum 10 000 ml"),
 });
 
 export type SettingsInput = z.infer<typeof settingsSchema>;

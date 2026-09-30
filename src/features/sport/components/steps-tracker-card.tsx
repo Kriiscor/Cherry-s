@@ -12,15 +12,16 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
-const DAILY_STEPS_TARGET = 10000;
 const DEFAULT_WEIGHT_KG = 70;
+const DEFAULT_STEPS_GOAL = 10000;
 
 type StepsTrackerCardProps = {
   date: Date;
 };
 
 /**
- * Daily step counter card. Shows current steps vs. 10 000-step target,
+ * Daily step counter card. Shows current steps vs. the user's personalised
+ * step goal (from `user_goals.daily_steps_goal`, defaulting to 10 000),
  * a progress gauge, quick-add chips (+1 000, +5 000), a manual input,
  * and an estimated calories burned. Data is persisted via an upsert on
  * `daily_steps` (one row per user per day).
@@ -35,11 +36,12 @@ export function StepsTrackerCard({ date }: StepsTrackerCardProps) {
 
   const currentSteps = stepsQuery.data ?? 0;
   const weightKg = goalsQuery.data?.weight_kg ?? DEFAULT_WEIGHT_KG;
+  const stepsGoal = goalsQuery.data?.daily_steps_goal ?? DEFAULT_STEPS_GOAL;
   const percentage = Math.min(
-    Math.round((currentSteps / DAILY_STEPS_TARGET) * 100),
+    Math.round((currentSteps / stepsGoal) * 100),
     100
   );
-  const isTargetReached = currentSteps >= DAILY_STEPS_TARGET;
+  const isTargetReached = currentSteps >= stepsGoal;
   const estimatedKcal = estimateCaloriesFromSteps(currentSteps, weightKg);
 
   const handleQuickAdd = (amount: number) => {
@@ -83,7 +85,7 @@ export function StepsTrackerCard({ date }: StepsTrackerCardProps) {
           </span>
         ) : (
           <span className="rounded-full bg-violet-50 px-2 py-0.5 text-[11px] font-bold text-violet-700 dark:bg-violet-950/50 dark:text-violet-300">
-            Cible {DAILY_STEPS_TARGET.toLocaleString("fr-FR")} pas
+            Cible {stepsGoal.toLocaleString("fr-FR")} pas
           </span>
         )}
       </div>

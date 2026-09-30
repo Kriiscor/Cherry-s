@@ -51,6 +51,18 @@ export const reviewStepSchema = z.object({
   proteinGrams: z.number().nonnegative(),
   carbsGrams: z.number().nonnegative(),
   fatGrams: z.number().nonnegative(),
+  dailyStepsGoal: z
+    .number()
+    .int()
+    .min(1000, "Minimum 1 000 pas")
+    .max(100000, "Maximum 100 000 pas")
+    .default(10000),
+  dailyWaterMl: z
+    .number()
+    .int()
+    .min(500, "Minimum 500 ml")
+    .max(10000, "Maximum 10 000 ml")
+    .default(2500),
 });
 
 /** Full payload persisted by the onboarding wizard's server action. */

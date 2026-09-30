@@ -53,6 +53,8 @@ export async function updateSettingsAction(
     proteinGrams,
     carbsGrams,
     fatGrams,
+    dailyStepsGoal,
+    dailyWaterMl,
   } = parsed.data;
 
   const { error: profileError } = await supabase
@@ -82,6 +84,8 @@ export async function updateSettingsAction(
         protein_grams: proteinGrams,
         carbs_grams: carbsGrams,
         fat_grams: fatGrams,
+        daily_steps_goal: dailyStepsGoal,
+        daily_water_ml: dailyWaterMl,
         updated_at: new Date().toISOString(),
       },
       { onConflict: "user_id" }

@@ -4,36 +4,36 @@ import { CheckCircle2, Droplet, PartyPopper } from "lucide-react";
 
 import { useDailyHydration } from "@/features/hydration/hooks/use-daily-hydration";
 import { useAddHydrationMutation } from "@/features/hydration/hooks/use-add-hydration-mutation";
+import { useUserGoals } from "@/features/dashboard/hooks/use-user-goals";
 
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 
-/** Daily hydration target in ml (TICK-021). Constant for this pass. */
-const DAILY_TARGET_ML = 2500;
+const DEFAULT_DAILY_WATER_ML = 2500;
 
 type HydrationTrackerCardProps = {
   date: Date;
 };
 
 /**
- * Daily hydration tracker (TICK-021), mockup style
- * (components_library/HydrationTrackerCard) rebuilt on theme tokens: a litre
- * counter, a colour-coded gauge (sky → emerald once the goal is reached), a
- * celebratory state, and quick-add +250 ml / +500 ml buttons with optimistic
- * updates. Dark-mode aware.
+ * Daily hydration tracker (TICK-021). Target comes from
+ * `user_goals.daily_water_ml` (default 2 500 ml) so each user can
+ * personalise it from the Settings page.
  */
 export function HydrationTrackerCard({ date }: HydrationTrackerCardProps) {
   const hydrationQuery = useDailyHydration(date);
   const addHydration = useAddHydrationMutation(date);
+  const goalsQuery = useUserGoals();
 
   const currentMl = hydrationQuery.data ?? 0;
+  const targetMl = goalsQuery.data?.daily_water_ml ?? DEFAULT_DAILY_WATER_ML;
   const currentLitres = (currentMl / 1000).toFixed(2);
-  const targetLitres = (DAILY_TARGET_ML / 1000).toFixed(2);
+  const targetLitres = (targetMl / 1000).toFixed(2);
   const percentage = Math.min(
-    Math.round((currentMl / DAILY_TARGET_ML) * 100),
+    Math.round((currentMl / targetMl) * 100),
     100
   );
-  const isTargetReached = currentMl >= DAILY_TARGET_ML;
+  const isTargetReached = currentMl >= targetMl;
 
   const handleAdd = (amount: number) => {
     addHydration.mutate({ amount_ml: amount });

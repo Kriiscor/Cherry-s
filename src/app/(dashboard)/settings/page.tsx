@@ -22,7 +22,7 @@ export default async function SettingsPage() {
     supabase
       .from("user_goals")
       .select(
-        "weight_kg, height_cm, age, sex, activity_level, goal_type, daily_calories, protein_grams, carbs_grams, fat_grams"
+        "weight_kg, height_cm, age, sex, activity_level, goal_type, daily_calories, protein_grams, carbs_grams, fat_grams, daily_steps_goal, daily_water_ml"
       )
       .eq("user_id", user.id)
       .maybeSingle(),
@@ -40,6 +40,8 @@ export default async function SettingsPage() {
     proteinGrams: goals?.protein_grams ?? 150,
     carbsGrams: goals?.carbs_grams ?? 200,
     fatGrams: goals?.fat_grams ?? 65,
+    dailyStepsGoal: goals?.daily_steps_goal ?? 10000,
+    dailyWaterMl: goals?.daily_water_ml ?? 2500,
   };
 
   return (

@@ -45,6 +45,8 @@ export async function saveUserGoals(
     proteinGrams,
     carbsGrams,
     fatGrams,
+    dailyStepsGoal,
+    dailyWaterMl,
   } = parsed.data;
 
   const payload: UserGoalsInsert = {
@@ -59,6 +61,8 @@ export async function saveUserGoals(
     protein_grams: proteinGrams,
     carbs_grams: carbsGrams,
     fat_grams: fatGrams,
+    daily_steps_goal: dailyStepsGoal,
+    daily_water_ml: dailyWaterMl,
     updated_at: new Date().toISOString(),
   };
 
