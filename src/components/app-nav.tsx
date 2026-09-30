@@ -2,12 +2,13 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, LineChart, Settings } from "lucide-react";
+import { Dumbbell, LineChart, Settings, Utensils } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { CherryLogo } from "@/components/ui/cherry-logo";
 
 const NAV_ITEMS = [
-  { href: "/dashboard", label: "Accueil", icon: LayoutDashboard },
+  { href: "/dashboard", label: "Nutrition", icon: Utensils },
+  { href: "/sport", label: "Sport", icon: Dumbbell },
   { href: "/analytics", label: "Analyses", icon: LineChart },
   { href: "/settings", label: "Réglages", icon: Settings },
 ];
@@ -22,7 +23,7 @@ export function AppNav() {
         href="/dashboard"
         prefetch={false}
         className="hidden items-center gap-1.5 px-3 text-xs font-bold text-primary sm:flex"
-        aria-label="Cherry's — Accueil"
+        aria-label="Cherry's — Nutrition"
       >
         <CherryLogo size="sm" />
         Cherry&apos;s
