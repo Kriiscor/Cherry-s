@@ -1,11 +1,12 @@
 "use client";
 
 import { useMemo, useState, useTransition } from "react";
-import { Loader2, Plus, Trash2 } from "lucide-react";
+import { Loader2, Plus, Sparkles, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
 import { useQueryClient } from "@tanstack/react-query";
 import { saveMealAction, updateMealAction } from "@/features/meals/actions";
+import { useAnalyzeMealMutation } from "@/features/meals/hooks/use-analyze-meal-mutation";
 import { MEAL_TYPE_OPTIONS, type MealType } from "@/features/meals/types";
 import { mealItemFormSchema, type MealSaveValues } from "@/lib/validators/mealItemSchema";
 import type { MealItem } from "@/lib/validators/aiMealSchema";
@@ -126,10 +127,31 @@ export function MealEditModal({
   onSaved,
 }: MealEditModalProps) {
   const queryClient = useQueryClient();
+  const analyzeMeal = useAnalyzeMealMutation();
   const [rows, setRows] = useState<EditableRow[]>(() => itemsToRows(items));
   const [draft, setDraft] = useState<NewItemDraft>(EMPTY_DRAFT);
   const [selectedMealType, setSelectedMealType] = useState<MealType>(mealType);
+  const [refinementText, setRefinementText] = useState("");
   const [isSaving, startSaving] = useTransition();
+
+  const isRefining = analyzeMeal.isPending;
+
+  const handleRefine = async () => {
+    const trimmed = refinementText.trim();
+    if (!trimmed) return;
+    try {
+      const result = await analyzeMeal.mutateAsync({
+        correction: trimmed,
+        previousItems: rows.map(({ item_name, weight_grams, calories, protein, carbs, fat }) => ({
+          item_name, weight_grams, calories, protein, carbs, fat,
+        })),
+      });
+      setRows(itemsToRows(result.items));
+      setRefinementText("");
+    } catch {
+      // useAnalyzeMealMutation already shows an error toast
+    }
+  };
 
   const totals = useMemo(
     () =>
@@ -373,6 +395,38 @@ export function MealEditModal({
           </p>
         )}
 
+        {/* Refinement section */}
+        <div className="flex gap-2 rounded-xl border border-primary/20 bg-primary/5 p-3">
+          <div className="flex flex-1 flex-col gap-1">
+            <span className="flex items-center gap-1 text-xs font-medium text-primary">
+              <Sparkles className="size-3" />
+              Quelque chose a-t-il été oublié ?
+            </span>
+            <Input
+              value={refinementText}
+              onChange={(e) => setRefinementText(e.target.value)}
+              onKeyDown={(e) => { if (e.key === "Enter" && refinementText.trim()) handleRefine(); }}
+              placeholder="Ex : il y avait aussi des oignons et une sauce tomate"
+              disabled={isSaving || isRefining}
+              className="text-sm"
+            />
+          </div>
+          <Button
+            type="button"
+            size="sm"
+            variant="secondary"
+            onClick={handleRefine}
+            disabled={isSaving || isRefining || !refinementText.trim()}
+            className="self-end"
+          >
+            {isRefining ? (
+              <Loader2 className="animate-spin" />
+            ) : (
+              "Affiner"
+            )}
+          </Button>
+        </div>
+
         <div className="flex flex-wrap items-end gap-2 rounded-xl border border-dashed border-input p-3">
           <div className="flex flex-col gap-1">
             <span className="text-xs text-muted-foreground">Nom</span>
@@ -472,7 +526,7 @@ export function MealEditModal({
           <Button
             type="button"
             onClick={handleSave}
-            disabled={isSaving || hasBlockingErrors}
+            disabled={isSaving || isRefining || hasBlockingErrors}
             className="w-full sm:w-auto"
           >
             {isSaving ? (

@@ -2,15 +2,25 @@ import { z } from "zod";
 
 /**
  * Incoming request payload for POST /api/ai/analyze-meal.
- * The caller must supply at least a photo URL or a text description.
+ * Initial analysis: supply imageUrl and/or textDescription.
+ * Refinement: supply correction + previousItems (current table state).
  */
 export const aiMealRequestSchema = z
   .object({
     imageUrl: z.string().url().optional(),
     textDescription: z.string().max(500, "Description trop longue").optional(),
+    correction: z.string().min(1).max(500, "Correction trop longue").optional(),
+    previousItems: z.array(z.object({
+      item_name: z.string(),
+      weight_grams: z.number(),
+      calories: z.number(),
+      protein: z.number(),
+      carbs: z.number(),
+      fat: z.number(),
+    })).optional(),
   })
-  .refine((data) => data.imageUrl || data.textDescription, {
-    message: "Fournir au moins une photo ou une description texte",
+  .refine((data) => data.imageUrl || data.textDescription || data.correction, {
+    message: "Fournir au moins une photo, une description texte ou une correction",
   });
 
 export type AiMealRequest = z.infer<typeof aiMealRequestSchema>;

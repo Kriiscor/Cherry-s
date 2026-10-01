@@ -194,27 +194,37 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const { imageUrl, textDescription } = parseResult.data;
+  const { imageUrl, textDescription, correction, previousItems } = parseResult.data;
 
   try {
     if (imageUrl) {
       await validateImageUrl(imageUrl);
     }
 
-    const userPromptParts = [
-      textDescription
-        ? `Description fournie par l'utilisateur : ${textDescription}`
-        : null,
-      imageUrl ? "Analyse la photo du repas fournie." : null,
-    ].filter((part): part is string => Boolean(part));
-    const userPrompt = userPromptParts.join("\n") || "Analyse ce repas.";
+    let userPrompt: string;
+    if (correction) {
+      const prevJson =
+        previousItems && previousItems.length > 0
+          ? JSON.stringify(previousItems, null, 2)
+          : "[]";
+      userPrompt = `Analyse précédente :\n${prevJson}\n\nL'utilisateur précise : ${correction}\n\nMets à jour l'analyse complète en tenant compte de cette précision. Renvoie le tableau JSON complet mis à jour avec tous les aliments (anciens et nouveaux).`;
+    } else {
+      const parts = [
+        textDescription
+          ? `Description fournie par l'utilisateur : ${textDescription}`
+          : null,
+        imageUrl ? "Analyse la photo du repas fournie." : null,
+      ].filter((part): part is string => Boolean(part));
+      userPrompt = parts.join("\n") || "Analyse ce repas.";
+    }
 
+    // Corrections never carry an image — always use the text model.
     // Two different models depending on input type: llava-13b (vision)
     // requires an `image` and has no separate system_prompt field, so the
     // instructions are folded into `prompt`; the text-only model matches the
     // more common prompt/system_prompt/max_tokens/temperature shape.
-    const model = imageUrl ? MEAL_VISION_MODEL : MEAL_TEXT_MODEL;
-    const input: Record<string, unknown> = imageUrl
+    const model = imageUrl && !correction ? MEAL_VISION_MODEL : MEAL_TEXT_MODEL;
+    const input: Record<string, unknown> = imageUrl && !correction
       ? {
           image: imageUrl,
           prompt: `${SYSTEM_PROMPT}\n\n${userPrompt}`,
