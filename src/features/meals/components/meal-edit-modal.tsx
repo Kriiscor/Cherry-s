@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState, useTransition } from "react";
-import { Loader2, Plus, Sparkles, Trash2 } from "lucide-react";
+import { Loader2, Sparkles, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
 import { useQueryClient } from "@tanstack/react-query";
@@ -46,24 +46,6 @@ type EditableRow = {
   originalProtein: number;
   originalCarbs: number;
   originalFat: number;
-};
-
-type NewItemDraft = {
-  name: string;
-  weight: string;
-  calories: string;
-  protein: string;
-  carbs: string;
-  fat: string;
-};
-
-const EMPTY_DRAFT: NewItemDraft = {
-  name: "",
-  weight: "",
-  calories: "",
-  protein: "",
-  carbs: "",
-  fat: "",
 };
 
 type MealEditModalProps = {
@@ -129,7 +111,6 @@ export function MealEditModal({
   const queryClient = useQueryClient();
   const analyzeMeal = useAnalyzeMealMutation();
   const [rows, setRows] = useState<EditableRow[]>(() => itemsToRows(items));
-  const [draft, setDraft] = useState<NewItemDraft>(EMPTY_DRAFT);
   const [selectedMealType, setSelectedMealType] = useState<MealType>(mealType);
   const [refinementText, setRefinementText] = useState("");
   const [isSaving, startSaving] = useTransition();
@@ -206,44 +187,6 @@ export function MealEditModal({
 
   const handleDelete = (id: string) => {
     setRows((prev) => prev.filter((row) => row.id !== id));
-  };
-
-  const handleAddItem = () => {
-    const trimmedName = draft.name.trim();
-    const weightNum = Number(draft.weight);
-
-    if (!trimmedName) {
-      toast.error("Indique un nom pour l'aliment.");
-      return;
-    }
-    if (!Number.isFinite(weightNum) || weightNum <= 0) {
-      toast.error("Indique un poids supérieur à 0.");
-      return;
-    }
-
-    const caloriesNum = Number(draft.calories) || 0;
-    const proteinNum = Number(draft.protein) || 0;
-    const carbsNum = Number(draft.carbs) || 0;
-    const fatNum = Number(draft.fat) || 0;
-
-    setRows((prev) => [
-      ...prev,
-      {
-        id: crypto.randomUUID(),
-        item_name: trimmedName,
-        weight_grams: weightNum,
-        calories: caloriesNum,
-        protein: proteinNum,
-        carbs: carbsNum,
-        fat: fatNum,
-        originalWeight: weightNum,
-        originalCalories: caloriesNum,
-        originalProtein: proteinNum,
-        originalCarbs: carbsNum,
-        originalFat: fatNum,
-      },
-    ]);
-    setDraft(EMPTY_DRAFT);
   };
 
   const handleSave = () => {
@@ -424,101 +367,6 @@ export function MealEditModal({
             ) : (
               "Affiner"
             )}
-          </Button>
-        </div>
-
-        <div className="flex flex-wrap items-end gap-2 rounded-xl border border-dashed border-input p-3">
-          <div className="flex flex-col gap-1">
-            <span className="text-xs text-muted-foreground">Nom</span>
-            <Input
-              value={draft.name}
-              onChange={(event) =>
-                setDraft((prev) => ({ ...prev, name: event.target.value }))
-              }
-              placeholder="Ex : Pain"
-              className="w-32"
-              disabled={isSaving}
-            />
-          </div>
-          <div className="flex flex-col gap-1">
-            <span className="text-xs text-muted-foreground">Poids (g)</span>
-            <Input
-              type="number"
-              min={0}
-              value={draft.weight}
-              onChange={(event) =>
-                setDraft((prev) => ({ ...prev, weight: event.target.value }))
-              }
-              placeholder="50"
-              className="w-20"
-              disabled={isSaving}
-            />
-          </div>
-          <div className="flex flex-col gap-1">
-            <span className="text-xs text-muted-foreground">Calories</span>
-            <Input
-              type="number"
-              min={0}
-              value={draft.calories}
-              onChange={(event) =>
-                setDraft((prev) => ({ ...prev, calories: event.target.value }))
-              }
-              placeholder="0"
-              className="w-20"
-              disabled={isSaving}
-            />
-          </div>
-          <div className="flex flex-col gap-1">
-            <span className="text-xs text-muted-foreground">Protéines</span>
-            <Input
-              type="number"
-              min={0}
-              value={draft.protein}
-              onChange={(event) =>
-                setDraft((prev) => ({ ...prev, protein: event.target.value }))
-              }
-              placeholder="0"
-              className="w-20"
-              disabled={isSaving}
-            />
-          </div>
-          <div className="flex flex-col gap-1">
-            <span className="text-xs text-muted-foreground">Glucides</span>
-            <Input
-              type="number"
-              min={0}
-              value={draft.carbs}
-              onChange={(event) =>
-                setDraft((prev) => ({ ...prev, carbs: event.target.value }))
-              }
-              placeholder="0"
-              className="w-20"
-              disabled={isSaving}
-            />
-          </div>
-          <div className="flex flex-col gap-1">
-            <span className="text-xs text-muted-foreground">Lipides</span>
-            <Input
-              type="number"
-              min={0}
-              value={draft.fat}
-              onChange={(event) =>
-                setDraft((prev) => ({ ...prev, fat: event.target.value }))
-              }
-              placeholder="0"
-              className="w-20"
-              disabled={isSaving}
-            />
-          </div>
-          <Button
-            type="button"
-            variant="secondary"
-            size="sm"
-            onClick={handleAddItem}
-            disabled={isSaving}
-          >
-            <Plus />
-            Ajouter
           </Button>
         </div>
 
