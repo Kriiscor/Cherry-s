@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import type React from "react";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
@@ -37,7 +38,7 @@ export const viewport: Viewport = {
   themeColor: "#E63946",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html
       lang="fr"

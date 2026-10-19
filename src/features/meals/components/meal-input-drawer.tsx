@@ -170,7 +170,7 @@ export function MealInputDrawer() {
     try {
       const result = await analyzeMeal.mutateAsync(
         activeTab === "photo"
-          ? { imageUrl, textDescription: userNotes.trim() || undefined }
+          ? { imageUrl, userNotes: userNotes.trim() || undefined }
           : { textDescription: textDescription.trim() }
       );
 
