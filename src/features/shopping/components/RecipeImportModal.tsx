@@ -51,7 +51,7 @@ function ImportContent({
 
   const compressToBase64 = (file: File): Promise<string> =>
     new Promise((resolve, reject) => {
-      const img = new Image();
+      const img = document.createElement("img");
       const objectUrl = URL.createObjectURL(file);
       img.onload = () => {
         URL.revokeObjectURL(objectUrl);
