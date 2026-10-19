@@ -76,24 +76,19 @@ function ImportContent({
     });
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files ?? []);
-    if (imageUrls.length + files.length > 10) {
-      toast.error("Maximum 10 images");
-      return;
-    }
+    const file = e.target.files?.[0];
     e.target.value = "";
-    for (const file of files) {
-      try {
-        const compressed = await compressToBase64(file);
-        setImageUrls((prev) => [...prev, compressed]);
-      } catch {
-        toast.error(`Impossible de charger ${file.name}`);
-      }
+    if (!file) return;
+    try {
+      const compressed = await compressToBase64(file);
+      setImageUrls([compressed]);
+    } catch {
+      toast.error(`Impossible de charger ${file.name}`);
     }
   };
 
-  const removeImage = (index: number) => {
-    setImageUrls((prev) => prev.filter((_, i) => i !== index));
+  const removeImage = () => {
+    setImageUrls([]);
   };
 
   const handleExtract = async (tab: "photos" | "text") => {
@@ -149,36 +144,31 @@ function ImportContent({
               ref={fileInputRef}
               type="file"
               accept="image/jpeg,image/png,image/webp"
-              multiple
               className="hidden"
               onChange={handleFileChange}
             />
 
-            <button
-              type="button"
-              onClick={() => fileInputRef.current?.click()}
-              className="w-full border-2 border-dashed border-border rounded-xl py-8 flex flex-col items-center gap-2 text-muted-foreground hover:border-primary hover:text-primary transition-colors"
-            >
-              <Upload className="h-8 w-8" />
-              <span className="text-sm font-medium">Ajouter des photos de recettes</span>
-              <span className="text-xs">JPEG, PNG, WebP — max 10 images</span>
-            </button>
-
-            {imageUrls.length > 0 && (
-              <div className="grid grid-cols-3 gap-2">
-                {imageUrls.map((url, i) => (
-                  <div key={i} className="relative aspect-square rounded-lg overflow-hidden bg-muted">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={url} alt={`Recette ${i + 1}`} className="w-full h-full object-cover" />
-                    <button
-                      type="button"
-                      onClick={() => removeImage(i)}
-                      className="absolute top-1 right-1 bg-black/60 rounded-full p-0.5"
-                    >
-                      <X className="h-3.5 w-3.5 text-white" />
-                    </button>
-                  </div>
-                ))}
+            {imageUrls.length === 0 ? (
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                className="w-full border-2 border-dashed border-border rounded-xl py-8 flex flex-col items-center gap-2 text-muted-foreground hover:border-primary hover:text-primary transition-colors"
+              >
+                <Upload className="h-8 w-8" />
+                <span className="text-sm font-medium">Ajouter une photo de recette</span>
+                <span className="text-xs">JPEG, PNG, WebP</span>
+              </button>
+            ) : (
+              <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-muted">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={imageUrls[0]} alt="Recette" className="w-full h-full object-cover" />
+                <button
+                  type="button"
+                  onClick={removeImage}
+                  className="absolute top-2 right-2 bg-black/60 rounded-full p-1"
+                >
+                  <X className="h-4 w-4 text-white" />
+                </button>
               </div>
             )}
 
@@ -186,6 +176,7 @@ function ImportContent({
               className="w-full gap-2"
               disabled={imageUrls.length === 0 || extract.isPending}
               onClick={() => handleExtract("photos")}
+              variant={imageUrls.length > 0 ? "default" : "outline"}
             >
               {extract.isPending ? (
                 <>

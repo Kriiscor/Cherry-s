@@ -102,50 +102,19 @@ export async function POST(request: NextRequest) {
     let rawText: string;
 
     if (images && images.length > 0) {
-      // Use vision model for the first image, then consolidate with text model
-      const firstImage = images[0];
-      const visionOutput = await runWithReplicateRetry(() =>
+      // Always exactly 1 Replicate call — analyse the first photo only.
+      // Additional photos are ignored; the UI limits to 1 photo for this reason.
+      const output = await runWithReplicateRetry(() =>
         replicate.run(MEAL_VISION_MODEL, {
           input: {
-            image: firstImage,
-            prompt: `${EXTRACT_SYSTEM_PROMPT}\n\nAnalyse cette photo de recette et extrais tous les ingrédients.`,
+            image: images[0],
+            prompt: `${EXTRACT_SYSTEM_PROMPT}\n\nAnalyse cette photo de recette et extrais tous les ingrédients visibles.`,
             max_tokens: 2048,
             temperature: 0.1,
           },
         })
       );
-      rawText = outputToText(visionOutput);
-
-      // If multiple images, process remaining ones
-      if (images.length > 1) {
-        const additionalTexts: string[] = [];
-        for (let i = 1; i < images.length; i++) {
-          const output = await runWithReplicateRetry(() =>
-            replicate.run(MEAL_VISION_MODEL, {
-              input: {
-                image: images[i],
-                prompt: `${EXTRACT_SYSTEM_PROMPT}\n\nAnalyse cette photo de recette.`,
-                max_tokens: 2048,
-                temperature: 0.1,
-              },
-            })
-          );
-          additionalTexts.push(outputToText(output));
-        }
-        // Consolidate all results
-        const consolidatePrompt = `Voici les extractions JSON de ${images.length} recettes :\n${[rawText, ...additionalTexts].join("\n---\n")}\n\nFusionne-les en un seul objet JSON en dédupliquant et en additionnant les quantités.`;
-        const consolidateOutput = await runWithReplicateRetry(() =>
-          replicate.run(MEAL_TEXT_MODEL, {
-            input: {
-              prompt: consolidatePrompt,
-              system_prompt: EXTRACT_SYSTEM_PROMPT,
-              max_tokens: 2048,
-              temperature: 0.1,
-            },
-          })
-        );
-        rawText = outputToText(consolidateOutput);
-      }
+      rawText = outputToText(output);
     } else {
       // Text-only path
       const textOutput = await runWithReplicateRetry(() =>
