@@ -49,21 +49,46 @@ function ImportContent({
   const extract = useExtractGroceriesMutation();
   const [saving, setSaving] = useState(false);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const compressToBase64 = (file: File): Promise<string> =>
+    new Promise((resolve, reject) => {
+      const img = new Image();
+      const objectUrl = URL.createObjectURL(file);
+      img.onload = () => {
+        URL.revokeObjectURL(objectUrl);
+        const MAX_DIM = 1024;
+        let w = img.naturalWidth;
+        let h = img.naturalHeight;
+        if (w > MAX_DIM || h > MAX_DIM) {
+          if (w > h) { h = Math.round((h * MAX_DIM) / w); w = MAX_DIM; }
+          else { w = Math.round((w * MAX_DIM) / h); h = MAX_DIM; }
+        }
+        const canvas = document.createElement("canvas");
+        canvas.width = w; canvas.height = h;
+        const ctx = canvas.getContext("2d")!;
+        ctx.fillStyle = "#FFFFFF";
+        ctx.fillRect(0, 0, w, h);
+        ctx.drawImage(img, 0, 0, w, h);
+        resolve(canvas.toDataURL("image/jpeg", 0.7));
+      };
+      img.onerror = () => { URL.revokeObjectURL(objectUrl); reject(); };
+      img.src = objectUrl;
+    });
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files ?? []);
     if (imageUrls.length + files.length > 10) {
       toast.error("Maximum 10 images");
       return;
     }
-    files.forEach((file) => {
-      const reader = new FileReader();
-      reader.onload = (ev) => {
-        const dataUrl = ev.target?.result as string;
-        if (dataUrl) setImageUrls((prev) => [...prev, dataUrl]);
-      };
-      reader.readAsDataURL(file);
-    });
     e.target.value = "";
+    for (const file of files) {
+      try {
+        const compressed = await compressToBase64(file);
+        setImageUrls((prev) => [...prev, compressed]);
+      } catch {
+        toast.error(`Impossible de charger ${file.name}`);
+      }
+    }
   };
 
   const removeImage = (index: number) => {

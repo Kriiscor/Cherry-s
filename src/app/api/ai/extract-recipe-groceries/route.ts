@@ -12,7 +12,7 @@ import {
 import { runWithReplicateRetry } from "@/lib/replicate/retry";
 import { createRateLimiter } from "@/lib/rate-limit";
 
-const MAX_REQUEST_BODY_BYTES = 2 * 1024 * 1024;
+const MAX_REQUEST_BODY_BYTES = 15 * 1024 * 1024;
 
 const rateLimiter = createRateLimiter(5, "1 m");
 
