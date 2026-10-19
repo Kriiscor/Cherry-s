@@ -2,13 +2,14 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Dumbbell, LineChart, Settings, Utensils } from "lucide-react";
+import { Dumbbell, LineChart, Settings, ShoppingCart, Utensils } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { CherryLogo } from "@/components/ui/cherry-logo";
 
 const NAV_ITEMS = [
   { href: "/dashboard", label: "Nutrition", icon: Utensils },
   { href: "/sport", label: "Sport", icon: Dumbbell },
+  { href: "/courses", label: "Courses", icon: ShoppingCart },
   { href: "/analytics", label: "Analyses", icon: LineChart },
   { href: "/settings", label: "Réglages", icon: Settings },
 ];
