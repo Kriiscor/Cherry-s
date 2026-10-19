@@ -21,6 +21,8 @@ import {
 import { TextTab } from "@/features/meals/components/text-tab";
 
 import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Dialog,
@@ -68,6 +70,7 @@ export function MealInputDrawer() {
   const [photoFile, setPhotoFile] = useState<File | null>(null);
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const [textDescription, setTextDescription] = useState("");
+  const [userNotes, setUserNotes] = useState("");
   const [isUploading, setIsUploading] = useState(false);
   const [pendingAnalysis, setPendingAnalysis] = useState<PendingAnalysis | null>(
     null
@@ -82,6 +85,7 @@ export function MealInputDrawer() {
       return null;
     });
     setTextDescription("");
+    setUserNotes("");
   }, []);
 
   const handleOpenChange = (nextOpen: boolean) => {
@@ -166,7 +170,7 @@ export function MealInputDrawer() {
     try {
       const result = await analyzeMeal.mutateAsync(
         activeTab === "photo"
-          ? { imageUrl }
+          ? { imageUrl, textDescription: userNotes.trim() || undefined }
           : { textDescription: textDescription.trim() }
       );
 
@@ -222,6 +226,39 @@ export function MealInputDrawer() {
             onFileSelected={handlePhotoSelected}
             disabled={isBusy}
           />
+          <div className="mt-3 space-y-2">
+            <div className="flex flex-wrap gap-2">
+              {[
+                "+1 c.à.s d'huile d'olive",
+                "+Sauce / Vinaigrette",
+                "+Pain (1 tranche)",
+                "+Boisson sucrée",
+              ].map((chip) => (
+                <Badge
+                  key={chip}
+                  variant="outline"
+                  className="cursor-pointer hover:bg-muted transition-colors text-xs px-2 py-1"
+                  onClick={() =>
+                    setUserNotes((prev) =>
+                      prev ? `${prev}, ${chip.slice(1)}` : chip.slice(1)
+                    )
+                  }
+                >
+                  {chip}
+                </Badge>
+              ))}
+            </div>
+            {(userNotes || photoPreview) && (
+              <Textarea
+                placeholder="Notes complémentaires (ex: Steak 180g, vinaigrette maison...)"
+                value={userNotes}
+                onChange={(e) => setUserNotes(e.target.value)}
+                disabled={isBusy}
+                rows={2}
+                className="resize-none text-sm"
+              />
+            )}
+          </div>
         </TabsContent>
         <TabsContent value="texte">
           <TextTab

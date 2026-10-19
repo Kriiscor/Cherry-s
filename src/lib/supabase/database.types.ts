@@ -297,6 +297,111 @@ export type Database = {
         };
         Relationships: [];
       };
+      shopping_lists: {
+        Row: {
+          id: string;
+          user_id: string;
+          name: string;
+          status: "active" | "completed" | "archived";
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          name?: string;
+          status?: "active" | "completed" | "archived";
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string;
+          name?: string;
+          status?: "active" | "completed" | "archived";
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+      shopping_items: {
+        Row: {
+          id: string;
+          list_id: string;
+          user_id: string;
+          name: string;
+          quantity: number | null;
+          unit: string | null;
+          aisle: string;
+          is_pantry_staple: boolean;
+          is_checked: boolean;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          list_id: string;
+          user_id: string;
+          name: string;
+          quantity?: number | null;
+          unit?: string | null;
+          aisle?: string;
+          is_pantry_staple?: boolean;
+          is_checked?: boolean;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          list_id?: string;
+          user_id?: string;
+          name?: string;
+          quantity?: number | null;
+          unit?: string | null;
+          aisle?: string;
+          is_pantry_staple?: boolean;
+          is_checked?: boolean;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+      planned_recipes: {
+        Row: {
+          id: string;
+          user_id: string;
+          title: string;
+          servings: number;
+          calories: number | null;
+          protein: number | null;
+          carbs: number | null;
+          fat: number | null;
+          is_cooked: boolean;
+          planned_date: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          title: string;
+          servings?: number;
+          calories?: number | null;
+          protein?: number | null;
+          carbs?: number | null;
+          fat?: number | null;
+          is_cooked?: boolean;
+          planned_date?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string;
+          title?: string;
+          servings?: number;
+          calories?: number | null;
+          protein?: number | null;
+          carbs?: number | null;
+          fat?: number | null;
+          is_cooked?: boolean;
+          planned_date?: string | null;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
     };
     Views: {
       [_ in never]: never;

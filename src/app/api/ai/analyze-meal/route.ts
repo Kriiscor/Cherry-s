@@ -194,7 +194,7 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const { imageUrl, textDescription, correction, previousItems } = parseResult.data;
+  const { imageUrl, textDescription, userNotes, correction, previousItems } = parseResult.data;
 
   try {
     if (imageUrl) {
@@ -214,6 +214,9 @@ export async function POST(request: NextRequest) {
           ? `Description fournie par l'utilisateur : ${textDescription}`
           : null,
         imageUrl ? "Analyse la photo du repas fournie." : null,
+        userNotes
+          ? `Notes complémentaires de l'utilisateur (prioritaires sur l'estimation visuelle) : "${userNotes}". Applique ces valeurs en priorité absolue.`
+          : null,
       ].filter((part): part is string => Boolean(part));
       userPrompt = parts.join("\n") || "Analyse ce repas.";
     }

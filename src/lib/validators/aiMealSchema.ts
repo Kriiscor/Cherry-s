@@ -9,6 +9,7 @@ export const aiMealRequestSchema = z
   .object({
     imageUrl: z.string().url().optional(),
     textDescription: z.string().max(500, "Description trop longue").optional(),
+    userNotes: z.string().max(300, "Notes trop longues").optional(),
     correction: z.string().min(1).max(500, "Correction trop longue").optional(),
     previousItems: z.array(z.object({
       item_name: z.string(),
