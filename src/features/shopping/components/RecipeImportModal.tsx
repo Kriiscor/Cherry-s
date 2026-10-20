@@ -49,6 +49,7 @@ function ImportContent({
   const extract = useExtractGroceriesMutation();
   const [saving, setSaving] = useState(false);
 
+  /** Resize a file to max 1024px and return a data URL. */
   const compressToBase64 = (file: File): Promise<string> =>
     new Promise((resolve, reject) => {
       const img = document.createElement("img");
@@ -75,32 +76,82 @@ function ImportContent({
       img.src = objectUrl;
     });
 
+  /**
+   * Stitch multiple base64 images into a single grid image so the vision
+   * model sees all of them in a single API call (no extra calls).
+   * 1 image → returned as-is. 2-4 images → 2-column grid, each cell 512px wide.
+   */
+  const stitchImages = (dataUrls: string[]): Promise<string> => {
+    if (dataUrls.length === 1) return Promise.resolve(dataUrls[0]!);
+    return new Promise((resolve) => {
+      const CELL = 512;
+      const cols = 2;
+      const rows = Math.ceil(dataUrls.length / cols);
+      const canvas = document.createElement("canvas");
+      canvas.width = cols * CELL;
+      canvas.height = rows * CELL;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) { resolve(dataUrls[0]!); return; }
+      ctx.fillStyle = "#FFFFFF";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      let loaded = 0;
+      dataUrls.forEach((url, i) => {
+        const el = document.createElement("img");
+        el.onload = () => {
+          const col = i % cols;
+          const row = Math.floor(i / cols);
+          // cover-fit into CELL×CELL
+          const scale = Math.min(CELL / el.naturalWidth, CELL / el.naturalHeight);
+          const sw = el.naturalWidth * scale;
+          const sh = el.naturalHeight * scale;
+          const ox = col * CELL + (CELL - sw) / 2;
+          const oy = row * CELL + (CELL - sh) / 2;
+          ctx.drawImage(el, ox, oy, sw, sh);
+          if (++loaded === dataUrls.length) {
+            resolve(canvas.toDataURL("image/jpeg", 0.75));
+          }
+        };
+        el.src = url;
+      });
+    });
+  };
+
+  const MAX_PHOTOS = 4;
+
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
+    const files = Array.from(e.target.files ?? []);
     e.target.value = "";
-    if (!file) return;
-    try {
-      const compressed = await compressToBase64(file);
-      setImageUrls([compressed]);
-    } catch {
-      toast.error(`Impossible de charger ${file.name}`);
+    const remaining = MAX_PHOTOS - imageUrls.length;
+    const toAdd = files.slice(0, remaining);
+    if (files.length > remaining) toast.error(`Maximum ${MAX_PHOTOS} photos`);
+    for (const file of toAdd) {
+      try {
+        const compressed = await compressToBase64(file);
+        setImageUrls((prev) => [...prev, compressed]);
+      } catch {
+        toast.error(`Impossible de charger ${file.name}`);
+      }
     }
   };
 
-  const removeImage = () => {
-    setImageUrls([]);
+  const removeImage = (index: number) => {
+    setImageUrls((prev) => prev.filter((_, i) => i !== index));
   };
 
   const handleExtract = async (tab: "photos" | "text") => {
-    const payload =
-      tab === "photos"
-        ? { images: imageUrls }
-        : { textRecipes };
-
-    extract.mutate(payload, {
-      onSuccess: (data) => setResult(data),
-      onError: (err) => toast.error(err.message ?? "Erreur IA"),
-    });
+    if (tab === "photos") {
+      const stitched = await stitchImages(imageUrls);
+      extract.mutate({ images: [stitched] }, {
+        onSuccess: (data) => setResult(data),
+        onError: (err) => toast.error(err.message ?? "Erreur IA"),
+      });
+    } else {
+      extract.mutate({ textRecipes }, {
+        onSuccess: (data) => setResult(data),
+        onError: (err) => toast.error(err.message ?? "Erreur IA"),
+      });
+    }
   };
 
   const handleSave = async () => {
@@ -144,6 +195,7 @@ function ImportContent({
               ref={fileInputRef}
               type="file"
               accept="image/jpeg,image/png,image/webp"
+              multiple
               className="hidden"
               onChange={handleFileChange}
             />
@@ -155,20 +207,39 @@ function ImportContent({
                 className="w-full border-2 border-dashed border-border rounded-xl py-8 flex flex-col items-center gap-2 text-muted-foreground hover:border-primary hover:text-primary transition-colors"
               >
                 <Upload className="h-8 w-8" />
-                <span className="text-sm font-medium">Ajouter une photo de recette</span>
-                <span className="text-xs">JPEG, PNG, WebP</span>
+                <span className="text-sm font-medium">Ajouter des photos de recette</span>
+                <span className="text-xs">JPEG, PNG, WebP — max {MAX_PHOTOS} photos</span>
               </button>
             ) : (
-              <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-muted">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={imageUrls[0]} alt="Recette" className="w-full h-full object-cover" />
-                <button
-                  type="button"
-                  onClick={removeImage}
-                  className="absolute top-2 right-2 bg-black/60 rounded-full p-1"
-                >
-                  <X className="h-4 w-4 text-white" />
-                </button>
+              <div className="space-y-2">
+                <div className="grid grid-cols-2 gap-2">
+                  {imageUrls.map((url, i) => (
+                    <div key={i} className="relative aspect-square rounded-lg overflow-hidden bg-muted">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={url} alt={`Recette ${i + 1}`} className="w-full h-full object-cover" />
+                      <button
+                        type="button"
+                        onClick={() => removeImage(i)}
+                        className="absolute top-1 right-1 bg-black/60 rounded-full p-0.5"
+                      >
+                        <X className="h-3.5 w-3.5 text-white" />
+                      </button>
+                    </div>
+                  ))}
+                  {imageUrls.length < MAX_PHOTOS && (
+                    <button
+                      type="button"
+                      onClick={() => fileInputRef.current?.click()}
+                      className="aspect-square rounded-lg border-2 border-dashed border-border flex flex-col items-center justify-center gap-1 text-muted-foreground hover:border-primary hover:text-primary transition-colors"
+                    >
+                      <Upload className="h-5 w-5" />
+                      <span className="text-xs">Ajouter</span>
+                    </button>
+                  )}
+                </div>
+                <p className="text-xs text-muted-foreground text-center">
+                  {imageUrls.length}/{MAX_PHOTOS} photo{imageUrls.length > 1 ? "s" : ""} · assemblées en une image pour l&apos;IA
+                </p>
               </div>
             )}
 
@@ -176,7 +247,6 @@ function ImportContent({
               className="w-full gap-2"
               disabled={imageUrls.length === 0 || extract.isPending}
               onClick={() => handleExtract("photos")}
-              variant={imageUrls.length > 0 ? "default" : "outline"}
             >
               {extract.isPending ? (
                 <>
